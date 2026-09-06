@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+
+<head>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>WELLORA | Nutrition & Diet</title>
+    <!-- Tailwind + FontAwesome -->
+    <script src="tailwind.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        /* ========== THEME VARIABLES (performance/vintage-modern) ========== */
+        :root,
+        html[data-theme='light'] {
+            --bg-body: #F7F9FC;
+            --text-primary: #0A1C2F;
+            --text-secondary: #2C3E50;
+            --accent: #527B55;
+            --accent-dark: #3E5E41;
+            --primary: #38523B;
+            --card-bg: #FFFFFF;
+            --border-light: #E2E8F0;
+            --hover-bg: #EDF2ED;
+            --footer-bg: #0F172A;
+            --footer-text: #E2E8F0;
+            --rating-star: #F59E0B;
+        }
+
+        html[data-theme='dark'] {
+            --bg-body: #0B1120;
+            --text-primary: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --accent: #8EBA93;
+            --accent-dark: #6B8E6E;
+            --primary: #527B55;
+            --card-bg: #1E293B;
+            --border-light: #334155;
+            --hover-bg: #212D23;
+            --footer-bg: #020617;
+            --footer-text: #CBD5E1;
+            --rating-star: #FBBF24;
+        }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.25s ease, color 0.2s;
+            overflow-x: hidden;
+        }
+
+        .text-accent {
+            color: var(--accent);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .border-accent {
+            border-color: var(--accent);
+        }
+
+        .hover\:bg-accent\/10:hover {
+            background-color: color-mix(in srgb, var(--accent) 10%, transparent);
+        }
+
+        .bg-card {
+            background-color: var(--card-bg);
+        }
+
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .border-border {
+            border-color: var(--border-light);
+        }
+
+        /* Navbar + glassmorphic */
+        #main-header nav {
+            background: var(--card-bg);
+            backdrop-filter: blur(0px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        html[data-theme='dark'] #main-header nav {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: 0.2s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Dropdown style */
+        .dropdown-wrapper {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 0.75rem;
+            min-width: 190px;
+            padding: 0.4rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .dropdown-wrapper.open .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 1rem;
+            color: var(--text-primary);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .dropdown-menu a:hover {
+            background: var(--hover-bg);
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        /* Tire comparison cards */
+        .tire-card {
+            transition: all 0.2s;
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
+        .tire-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border-radius: 9999px;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: scale(1.02);
+        }
+
+        .btn-outline {
+            border: 1.5px solid var(--accent);
+            color: var(--accent);
+            border-radius: 9999px;
+            background: transparent;
+            transition: 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .rating-star {
+            color: var(--rating-star);
+        }
+
+        .status-badge {
+            background: #10b98120;
+            color: #10b981;
+            border-radius: 999px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .vehicle-track {
+            background: var(--card-bg);
+            border-left: 4px solid var(--accent);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        button:focus,
+        .dropdown-toggle:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .dropdown-toggle {
+            -webkit-appearance: none;
+            appearance: none;
+            border: none;
+            background: transparent;
+        }
+
+        @media (max-width: 1279px) {
+            .dropdown-menu {
+                position: static;
+                display: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                margin-top: 0.5rem;
+            }
+
+            .dropdown-wrapper.open .dropdown-menu {
+                display: block;
+            }
+        }
+
+        /* Mobile Drawer Link Hover & Active Underlines */
+        #mobile-drawer nav a:not(.rounded-full) {
+            position: relative;
+            transition: color 0.2s ease;
+            width: fit-content;
+        }
+
+        #mobile-drawer nav a.active:not(.rounded-full) {
+            color: var(--accent) !important;
+        }
+
+        #mobile-drawer nav a:not(.rounded-full)::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.2s ease;
+        }
+
+        #mobile-drawer nav a:not(.rounded-full):hover::after {
+            width: 100%;
+        }
+
+        /* RTL support for navigation spacing, underlines and menus */
+        html[dir="rtl"] #main-header .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+            margin-right: 2rem !important;
+            margin-left: 0 !important;
+        }
+        html[dir="rtl"] .dropdown-menu {
+            left: auto;
+            right: 0;
+        }
+        html[dir="rtl"] .dropdown-menu a:hover {
+            transform: translateX(-4px);
+        }
+        html[dir="rtl"] .hover\:translate-x-1:hover {
+            transform: translateX(-0.25rem) !important;
+        }
+        html[dir="rtl"] .nav-link::after {
+            left: auto;
+            right: 0;
+        }
+        html[dir="rtl"] #mobile-drawer nav a:not(.rounded-full)::after {
+            left: auto;
+            right: 0;
+        }
+    </style>
+    <style id="typography-alignment">
+        /* Typography Alignment & Consistency Overrides */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 500 !important;
+        }
+        /* Keep paragraph weights 400-500 */
+        p:not(.font-medium), div.text-secondary {
+            font-weight: 400 !important;
+        }
+        /* Ensure proper text alignment inside cards */
+        .tire-card, .bg-card, .card {
+            text-align: left !important;
+        }
+        .text-center .tire-card, .text-center .bg-card {
+            text-align: left !important;
+        }
+        /* Reduce overly wide paragraphs inside containers for readability */
+        .container p, section > div > p.text-secondary {
+            max-width: 65ch;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .tire-card p, .bg-card p, .card p, .text-left p {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            max-width: none !important;
+        }
+    </style>
+    <style id="cta-improvements">
+        /* Primary CTA Highlights */
+        .btn-primary {
+            box-shadow: 0 4px 12px 0 rgba(82, 123, 85, 0.4);
+            color: #ffffff !important;
+        }
+        html[data-theme='dark'] .btn-primary {
+            box-shadow: 0 4px 12px 0 rgba(142, 186, 147, 0.3);
+            color: #0f172a !important; /* High contrast in dark mode */
+            font-weight: 600 !important;
+        }
+        
+        /* Hover Color Consistency & Contrast */
+        .btn-primary:hover {
+            background-color: var(--accent-dark) !important;
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 6px 16px 0 rgba(82, 123, 85, 0.5);
+        }
+        html[data-theme='dark'] .btn-primary:hover {
+            box-shadow: 0 6px 16px 0 rgba(142, 186, 147, 0.4);
+        }
+        
+        .btn-outline {
+            color: var(--accent) !important;
+            border-color: var(--accent) !important;
+        }
+        .btn-outline:hover {
+            background-color: var(--accent) !important;
+            color: #ffffff !important;
+            transform: translateY(-1px);
+        }
+        html[data-theme='dark'] .btn-outline:hover {
+            color: #0f172a !important; /* High contrast in dark mode */
+        }
+
+        /* Align CTA buttons consistently inside cards/grids */
+        .tire-card, .dashboard-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            gap: 1.25rem;
+        }
+        .tire-card > div:last-child, .dashboard-card > div:last-child, .dashboard-card > button:last-child {
+            margin-top: auto;
+        }
+    </style>
+    <style id="image-improvements">
+        /* Prevent image distortion globally */
+        img:not([src*="fav.png"]):not(.object-contain) {
+            object-fit: cover !important;
+        }
+        
+        /* Ensure proper background overlays for readability (apply to containers if needed) */
+        .bg-overlay {
+            position: relative;
+        }
+        .bg-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.95) 100%);
+            border-radius: inherit;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .bg-overlay > *:not(img) {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+    <style id="responsive-fixes">
+        /* Guarantee text wrapping on small screens */
+        body {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            -ms-word-break: break-all;
+            word-break: break-word;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Fixed Header -->
+    <header class="fixed top-0 left-0 w-full z-50 pt-3" id="main-header">
+        <nav
+            class="max-w-7xl mx-auto px-5 py-3 rounded-2xl flex items-center justify-between backdrop-blur-sm border border-border">
+            <a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;"><img src="assets/logo.png" alt="WELLORA Logo" class="h-10 w-auto">WELLORA</a>
+            <!-- Desktop Center Nav -->
+            <div class="hidden xl:flex items-center space-x-8 rtl:space-x-reverse text-sm font-medium">
+                <div class="dropdown-wrapper">
+                    <button class="nav-link active dropdown-toggle inline-flex items-center gap-1">
+                        <span>Home</span><i
+                            class="fas fa-chevron-down text-[10px] leading-none inline-block translate-y-[2.5px]"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="index.html" class="text-accent font-medium">Home 1</a>
+                        <a href="home2.html">Home 2</a>
+                    </div>
+                </div>
+                <a href="service.html" class="nav-link">Services</a>
+                <a href="plans.html" class="nav-link">Plans</a>
+                <a href="experts.html" class="nav-link">Our Experts</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <div class="dropdown-wrapper">
+                    <button class="nav-link dropdown-toggle inline-flex items-center gap-1">
+                        <span>Dashboard</span><i
+                            class="fas fa-chevron-down text-[10px] leading-none inline-block translate-y-[2.5px]"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="admin.html">Admin Dashboard</a>
+                        <a href="user.html">User Dashboard</a>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden xl:flex items-center gap-4">
+                <a href="login.html" class="btn-outline px-5 py-2 text-sm font-medium"><i class="fas fa-sign-in-alt mr-1"></i> Login</a>
+                <a href="signup.html" class="btn-primary px-5 py-2 text-sm font-medium"><i class="fas fa-user-plus mr-1"></i> Signup</a>
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-accent/10"><i
+                        class="fas fa-moon light-icon"></i><i class="fas fa-sun dark-icon hidden"></i></button>
+                <button id="lang-icon" class="p-2 rounded-full hover:bg-accent/10"><i class="fas fa-exchange-alt"></i></button>
+            </div>
+            <div class="xl:hidden flex items-center gap-3">
+                <button id="mobile-menu-open"><i class="fas fa-bars text-2xl"></i></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="fixed inset-0 z-50 pointer-events-none transition-all duration-300">
+        <div id="drawer-backdrop" class="absolute inset-0 bg-black/50 opacity-0 transition pointer-events-none"></div>
+        <div id="drawer-panel"
+            class="absolute top-0 left-0 w-80 h-full bg-card shadow-2xl transform -translate-x-full transition-transform duration-300 p-6 overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-border pb-4"><a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;; color: var(--accent) !important;"><img src="assets/logo.png" alt="WELLORA Logo" class="h-10 w-auto">WELLORA</a><button id="drawer-close"><i
+                        class="fas fa-times text-xl"></i></button></div>
+            <nav class="flex flex-col gap-3 mt-6">
+                <div><button id="mobile-home-toggle"
+                        class="flex w-full justify-between items-center py-2 font-medium text-accent">Home <i
+                            class="fas fa-chevron-down text-xs"></i></button>
+                    <div id="mobile-home-submenu" class="pl-4 flex flex-col gap-2 mt-1 border-l border-border">
+                        <a href="index.html" class="text-accent font-medium">Home 1</a><a href="home2.html">Home 2</a>
+                    </div>
+                </div>
+                <a href="service.html" class="py-2 font-medium">Services</a>
+                <a href="plans.html" class="py-2 font-medium">Plans</a>
+                <a href="experts.html" class="py-2 font-medium">Our Experts</a>
+                <a href="about.html" class="py-2 font-medium">About Us</a>
+                <a href="contact.html" class="py-2 font-medium">Contact</a>
+                <div><button id="mobile-dashboard-toggle"
+                        class="flex w-full justify-between items-center py-2 font-medium">Dashboard <i
+                            class="fas fa-chevron-down text-xs"></i></button>
+                    <div id="mobile-dashboard-submenu"
+                        class="hidden pl-4 flex flex-col gap-2 mt-1 border-l border-border">
+                        <a href="admin.html">Admin Dashboard</a><a href="user.html">User Dashboard</a>
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-border flex gap-3 mt-4">
+                    <a href="login.html"
+                        class="flex-1 text-center border border-accent rounded-full py-2 text-accent"><i
+                            class="fas fa-key mr-1"></i> Login</a>
+                    <a href="signup.html" class="flex-1 text-center bg-accent rounded-full py-2 text-white"><i
+                            class="fas fa-user-plus mr-1"></i> Signup</a>
+                </div>
+                <div class="flex justify-around mt-6 pt-2"><button id="mobile-theme-btn" class="p-2"><i
+                            class="fas fa-moon"></i> Theme</button><button id="mobile-rtl-btn" class="p-2"><i
+                            class="fas fa-exchange-alt"></i> RTL</button></div>
+            </nav>
+        </div>
+    </div>
+<main>
+    <!-- SECTION 1: SPLIT HERO WITH FLOATING WIDGETS -->
+    <section class="relative overflow-hidden pt-32 pb-12 md:pt-40 md:pb-20 bg-[var(--hover-bg)]">
+        <div class="max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-12 items-center">
+            <div class="reveal active relative z-10 text-left">
+                <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-card text-accent border border-border text-xs font-bold uppercase tracking-widest mb-6 shadow-sm">
+                    <i class="fas fa-bolt text-yellow-500"></i> Wellora Performance Pro
+                </span>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-medium leading-tight mb-6">
+                    Data-Driven Nutrition for <br> <span class="text-accent">Peak Performance</span>
+                </h1>
+                <p class="text-secondary text-lg mb-8 max-w-xl">
+                    Elevate your health with clinical-grade diet programming. Log meals, track macros, and sync directly with top-tier dietitians.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 mb-10">
+                    <a href="signup.html" class="btn-primary px-8 py-3.5 text-base shadow-lg text-center"><i class="fas fa-clipboard-check mr-2"></i> Start Assessment</a>
+                    <a href="#dashboard" class="btn-outline px-8 py-3.5 text-base bg-card text-center"><i class="fas fa-mobile-alt mr-2"></i> View Dashboard</a>
+                </div>
+                <div class="flex items-center gap-6 text-sm font-medium">
+                    <div class="flex items-center gap-2"><i class="fas fa-check-circle text-accent"></i> Clinical Grade</div>
+                    <div class="flex items-center gap-2"><i class="fas fa-check-circle text-accent"></i> Weekly Syncs</div>
+                </div>
+            </div>
+            <div class="relative reveal active lg:pl-10 h-full w-full flex items-center justify-center">
+                <div class="relative w-full aspect-square max-w-sm md:max-w-md mx-auto mt-10 lg:mt-0">
+                    <!-- Main Image -->
+                    <img src="assets/h2.jpg" alt="Nutrition" class="absolute inset-0 w-full h-full object-cover rounded-full shadow-2xl border-8 border-[var(--bg-body)] z-10">
+                    
+                   
+
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: THE 3-PILLAR METHOD (Horizontal Layout) -->
+    <section class="py-16 bg-card border-y border-border">
+        <div class="max-w-7xl mx-auto px-5">
+            <div class="grid lg:grid-cols-3 gap-8 divide-y lg:divide-y-0 lg:divide-x divide-border">
+                <div class="reveal p-6 text-center lg:text-left">
+                    <div class="w-16 h-16 bg-[var(--hover-bg)] text-accent rounded-full flex items-center justify-center text-2xl mb-6 mx-auto lg:mx-0 border border-border shadow-sm">01</div>
+                    <h3 class="text-xl font-medium mb-3">Clinical Assessment</h3>
+                    <p class="text-secondary text-sm">We analyze your biometric data, lifestyle habits, and medical history to establish your unique nutritional baseline.</p>
+                </div>
+                <div class="reveal p-6 text-center lg:text-left" style="transition-delay: 100ms;">
+                    <div class="w-16 h-16 bg-accent text-white rounded-full flex items-center justify-center text-2xl mb-6 mx-auto lg:mx-0 shadow-md">02</div>
+                    <h3 class="text-xl font-medium mb-3">Precision Programming</h3>
+                    <p class="text-secondary text-sm">Your dedicated dietitian crafts a macro-optimized meal plan that aligns perfectly with your metabolic requirements.</p>
+                </div>
+                <div class="reveal p-6 text-center lg:text-left" style="transition-delay: 200ms;">
+                    <div class="w-16 h-16 bg-[var(--hover-bg)] text-accent rounded-full flex items-center justify-center text-2xl mb-6 mx-auto lg:mx-0 border border-border shadow-sm">03</div>
+                    <h3 class="text-xl font-medium mb-3">Continuous Tracking</h3>
+                    <p class="text-secondary text-sm">Log your intake, sync your wearable devices, and visualize your progress through our interactive tracking portal.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: DASHBOARD FEATURES (Zig-Zag Layout) -->
+    <section id="dashboard" class="py-20 md:py-28 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-5">
+            <div class="text-center reveal mb-16">
+                <span class="text-accent font-medium text-sm uppercase tracking-widest block mb-2">The Tech</span>
+                <h2 class="text-3xl md:text-4xl font-medium">Your Health, <span class="text-accent">Visualized</span></h2>
+                <div class="w-16 h-1 bg-accent mx-auto mt-4"></div>
+            </div>
+
+            <!-- Feature 1 -->
+            <div class="grid md:grid-cols-2 gap-12 items-center mb-20 reveal">
+                <div class="order-2 md:order-1 relative">
+                    <div class="absolute inset-0 bg-accent/10 transform rotate-3 rounded-3xl"></div>
+                    <img src="assets/h3.jpg" alt="Meal Logging" class="relative rounded-3xl shadow-lg border border-border w-full h-[350px] object-cover">
+                </div>
+                <div class="order-1 md:order-2">
+                    <div class="w-12 h-12 bg-accent/10 text-accent rounded-lg flex items-center justify-center text-xl mb-4"><i class="fas fa-utensils"></i></div>
+                    <h3 class="text-2xl font-medium mb-4">Intelligent Meal Logging</h3>
+                    <p class="text-secondary mb-6">Ditch the complicated spreadsheets. Our visual meal planner provides day-by-day recipes, exact portion sizes, and automated grocery lists. Just check off what you've eaten.</p>
+                    <ul class="space-y-3 text-sm font-medium">
+                        <li class="flex items-center gap-3"><i class="fas fa-check-circle text-accent"></i> Extensive recipe database with prep times.</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check-circle text-accent"></i> Macro and micro-nutrient breakdowns per meal.</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check-circle text-accent"></i> One-click water intake tracking.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="grid md:grid-cols-2 gap-12 items-center reveal">
+                <div>
+                    <div class="w-12 h-12 bg-accent/10 text-accent rounded-lg flex items-center justify-center text-xl mb-4"><i class="fas fa-chart-line"></i></div>
+                    <h3 class="text-2xl font-medium mb-4">Interactive Progress Graphs</h3>
+                    <p class="text-secondary mb-6">See the results of your hard work. Log your weight, body measurements, and energy levels to watch your personal growth trajectory plotted in real-time.</p>
+                    <ul class="space-y-3 text-sm font-medium">
+                        <li class="flex items-center gap-3"><i class="fas fa-check-circle text-accent"></i> Weekly average weight smoothing.</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check-circle text-accent"></i> Body measurement comparative overlays.</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check-circle text-accent"></i> Direct feedback loop with your dietitian.</li>
+                    </ul>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-0 bg-slate-800/10 transform -rotate-3 rounded-3xl"></div>
+                    <img src="assets/h5.jpg" alt="Progress Tracking" class="relative rounded-3xl shadow-lg border border-border w-full h-[350px] object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: HORIZONTAL SERVICE PATHS -->
+    <section class="py-16 md:py-24 bg-[var(--hover-bg)]">
+        <div class="max-w-7xl mx-auto px-5">
+            <div class="text-center reveal mb-12">
+                <h2 class="text-3xl md:text-4xl font-medium mb-4">Specialized <span class="text-accent">Pathways</span></h2>
+                <p class="text-secondary max-w-2xl mx-auto">Choose a focused track to ensure your dashboard and meal plans are perfectly calibrated to your specific lifestyle goals.</p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Pathway 1 -->
+                <div class="tire-card bg-card p-6 md:p-8 rounded-3xl border border-border flex flex-col md:flex-row items-center gap-8 reveal hover:border-accent">
+                    <div class="w-24 h-24 shrink-0 rounded-full overflow-hidden border-4 border-[var(--bg-body)] shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover" alt="Weight Loss">
+                    </div>
+                    <div class="flex-1 text-center md:text-left">
+                        <h3 class="text-2xl font-medium mb-2">Metabolic Reset (Weight Loss)</h3>
+                        <p class="text-secondary text-sm">A scientifically backed approach to shedding body fat while preserving lean muscle mass. Includes satiety-focused meal planning and intermittent fasting schedules if desired.</p>
+                    </div>
+                    <div class="shrink-0">
+                        <a href="plans.html" class="btn-primary px-6 py-2 block text-sm">View Plan</a>
+                    </div>
+                </div>
+
+                <!-- Pathway 2 -->
+                <div class="tire-card bg-card p-6 md:p-8 rounded-3xl border border-border flex flex-col md:flex-row items-center gap-8 reveal hover:border-accent" style="transition-delay: 100ms;">
+                    <div class="w-24 h-24 shrink-0 rounded-full overflow-hidden border-4 border-[var(--bg-body)] shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover" alt="Gut Health">
+                    </div>
+                    <div class="flex-1 text-center md:text-left">
+                        <h3 class="text-2xl font-medium mb-2">Gut Health & Immunity</h3>
+                        <p class="text-secondary text-sm">Targeted protocols for IBS, bloating, and systemic inflammation. Features low-FODMAP guidance, elimination diet tracking, and microbiome-friendly recipes.</p>
+                    </div>
+                    <div class="shrink-0">
+                        <a href="plans.html" class="btn-primary px-6 py-2 block text-sm">View Plan</a>
+                    </div>
+                </div>
+
+                <!-- Pathway 3 -->
+                <div class="tire-card bg-card p-6 md:p-8 rounded-3xl border border-border flex flex-col md:flex-row items-center gap-8 reveal hover:border-accent" style="transition-delay: 200ms;">
+                    <div class="w-24 h-24 shrink-0 rounded-full overflow-hidden border-4 border-[var(--bg-body)] shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover" alt="Athletic Fuel">
+                    </div>
+                    <div class="flex-1 text-center md:text-left">
+                        <h3 class="text-2xl font-medium mb-2">Elite Athlete Fueling</h3>
+                        <p class="text-secondary text-sm">Performance nutrition designed around your training schedule. Includes precise carb-cycling, hydration targets, and recovery-focused micronutrient timing.</p>
+                    </div>
+                    <div class="shrink-0">
+                        <a href="plans.html" class="btn-primary px-6 py-2 block text-sm">View Plan</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: MEET THE EXPERTS -->
+    <section class="py-16 md:py-24">
+        <div class="max-w-7xl mx-auto px-5">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal">
+                <div class="max-w-2xl">
+                    <span class="text-accent font-medium text-sm uppercase tracking-widest block mb-2">Our Team</span>
+                    <h2 class="text-3xl md:text-4xl font-medium mb-4">World-Class <span class="text-accent">Dietitians</span></h2>
+                    <p class="text-secondary">When you join Wellora, you are paired with a licensed professional dedicated to your success.</p>
+                </div>
+                <a href="experts.html" class="text-accent font-medium mt-4 md:mt-0 hover:underline">See All Experts <i class="fas fa-arrow-right text-xs ml-1"></i></a>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
+                <!-- Expert 1 -->
+                <div class="bg-card rounded-3xl border border-border overflow-hidden reveal group hover:shadow-xl transition-shadow flex flex-col h-full">
+                    <div class="h-64 overflow-hidden shrink-0">
+                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80" alt="Dr. Emily Chen" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-6 text-center flex flex-col flex-grow">
+                        <h4 class="text-xl font-medium mb-1">Dr. Emily Chen</h4>
+                        <p class="text-xs text-accent font-bold uppercase tracking-wider mb-4">Lead Clinical Dietitian, RD</p>
+                        <p class="text-sm text-secondary mb-4">Specializes in endocrine disorders, PCOS, and medical weight management with 10+ years of clinical experience.</p>
+                        <div class="flex justify-center gap-3 mt-auto">
+                            <a href="#" class="w-8 h-8 rounded-full bg-[var(--hover-bg)] flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-colors"><i class="fab fa-linkedin-in text-xs"></i></a>
+                            <a href="#" class="w-8 h-8 rounded-full bg-[var(--hover-bg)] flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-colors"><i class="fas fa-envelope text-xs"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Expert 2 -->
+                <div class="bg-card rounded-3xl border border-border overflow-hidden reveal group hover:shadow-xl transition-shadow flex flex-col h-full" style="transition-delay: 100ms;">
+                    <div class="h-64 overflow-hidden shrink-0">
+                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=600&q=80" alt="Marcus Johnson" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-6 text-center flex flex-col flex-grow">
+                        <h4 class="text-xl font-medium mb-1">Marcus Johnson</h4>
+                        <p class="text-xs text-accent font-bold uppercase tracking-wider mb-4">Sports Nutritionist, CSSD</p>
+                        <p class="text-sm text-secondary mb-4">Former collegiate athlete helping runners, lifters, and CrossFitters optimize their fuel for maximum performance.</p>
+                        <div class="flex justify-center gap-3 mt-auto">
+                            <a href="#" class="w-8 h-8 rounded-full bg-[var(--hover-bg)] flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-colors"><i class="fab fa-linkedin-in text-xs"></i></a>
+                            <a href="#" class="w-8 h-8 rounded-full bg-[var(--hover-bg)] flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-colors"><i class="fas fa-envelope text-xs"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Expert 3 -->
+                <div class="bg-card rounded-3xl border border-border overflow-hidden reveal group hover:shadow-xl transition-shadow flex flex-col h-full" style="transition-delay: 200ms;">
+                    <div class="h-64 overflow-hidden shrink-0">
+                        <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=600&q=80" alt="Sarah Williams" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-6 text-center flex flex-col flex-grow">
+                        <h4 class="text-xl font-medium mb-1">Sarah Williams</h4>
+                        <p class="text-xs text-accent font-bold uppercase tracking-wider mb-4">Holistic Health Coach, MS</p>
+                        <p class="text-sm text-secondary mb-4">Focuses on gut microbiome health, intuitive eating, and building sustainable, lifelong dietary habits.</p>
+                        <div class="flex justify-center gap-3 mt-auto">
+                            <a href="#" class="w-8 h-8 rounded-full bg-[var(--hover-bg)] flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-colors"><i class="fab fa-linkedin-in text-xs"></i></a>
+                            <a href="#" class="w-8 h-8 rounded-full bg-[var(--hover-bg)] flex items-center justify-center text-secondary hover:bg-accent hover:text-white transition-colors"><i class="fas fa-envelope text-xs"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: PREMIUM CTA BLOCK -->
+    <section class="py-16 px-5 mb-10 max-w-7xl mx-auto">
+        <div class="bg-[var(--footer-bg)] rounded-3xl overflow-hidden reveal shadow-2xl relative">
+            <div class="absolute inset-0 bg-accent opacity-5 backdrop-blur-3xl pointer-events-none"></div>
+            <!-- Decorative circles -->
+            <div class="absolute -top-24 -right-24 w-64 h-64 border-[40px] border-accent opacity-20 rounded-full"></div>
+            <div class="absolute -bottom-24 -left-24 w-64 h-64 border-[40px] border-accent opacity-10 rounded-full pointer-events-none"></div>
+            
+            <div class="relative z-10 py-16 px-8 md:py-24 md:px-16 flex flex-col md:flex-row items-center justify-between gap-10">
+                <div class="text-white text-center md:text-left max-w-xl">
+                    <h2 class="text-3xl md:text-4xl font-medium mb-4">Upgrade Your Nutrition Strategy Today.</h2>
+                    <p class="text-[var(--footer-text)]/80 text-lg">Stop guessing. Get a personalized plan, connect with a certified dietitian, and start tracking your success in the Wellora dashboard.</p>
+                </div>
+                <div class="flex flex-col gap-4 w-full md:w-auto shrink-0">
+                    <a href="plans.html" class="bg-accent hover:bg-[var(--accent-dark)] text-white text-center font-semibold px-8 py-4 rounded-xl transition-colors shadow-lg">
+                        View Pricing Plans
+                    </a>
+                    <a href="login.html" class="bg-transparent border border-slate-600 hover:border-white text-white text-center font-medium px-8 py-4 rounded-xl transition-colors">
+                        Client Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+    <!-- Footer -->
+    <footer class="pt-16 pb-8 border-t border-slate-800"
+        style="background: var(--footer-bg); color: var(--footer-text);">
+        <div class="max-w-7xl mx-auto px-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+            <div class="col-span-2 md:col-span-2 lg:col-span-1">
+                <a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;"><img src="assets/logo.png" alt="WELLORA Logo" class="h-10 w-auto">WELLORA</a>
+                <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                    Premier online nutrition and diet consultation service. Personalized meal plans and expert guidance for a healthier you.
+                </p>
+                <div class="mt-4 space-y-2 text-xs text-slate-300">
+                    <p class="flex items-center gap-2"><i class="fas fa-phone text-accent"></i> (800) 555-WELL</p>
+                    <p class="flex items-center gap-2"><i class="far fa-clock text-accent"></i> Mon-Fri, 9am-6pm</p>
+                </div>
+                <div class="flex gap-2.5 mt-5">
+                    <a href="#"
+                        class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="#"
+                        class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i
+                            class="fab fa-facebook-f text-sm"></i></a>
+                    <a href="#"
+                        class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i
+                            class="fab fa-x-twitter"></i></a>
+                    <a href="#"
+                        class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i
+                            class="fab fa-linkedin-in text-sm"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Services</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="#services"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Weight Management</a></li>
+                    <li><a href="#services"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Clinical Nutrition</a></li>
+                    <li><a href="#services"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Sports Nutrition</a></li>
+                    <li><a href="#services"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Pediatric Nutrition</a></li>
+                    <li><a href="#services"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Corporate Wellness</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Support</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="contact.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Book Consultation</a></li>
+                    <li><a href="#faq"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Nutrition Guide</a></li>
+                    <li><a href="contact.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Cancellation Policy</a></li>
+                    <li><a href="contact.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Customer FAQ</a></li>
+                    <li><a href="contact.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Contact Center</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Company</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="#locations"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Our Clinics</a></li>
+                    <li><a href="index.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">About WELLORA</a></li>
+                    <li><a href="signup.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Careers</a>
+                    </li>
+                    <li><a href="login.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Partner Portal</a></li>
+                    <li><a href="contact.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Press Kit</a></li>
+                </ul>
+            </div>
+            <div class="col-span-2 md:col-span-3 lg:col-span-1">
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Stay Connected</h4>
+                <p class="text-xs text-slate-400 mb-3 leading-relaxed">
+                    Subscribe for healthy recipes, diet tips, and exclusive seasonal offers.
+                </p>
+                <form class="flex gap-2 max-w-xs" onsubmit="event.preventDefault(); alert('Subscribed successfully!');">
+                    <input type="email" placeholder="Your email address" required
+                        class="bg-slate-800 border border-slate-700 text-white text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-accent transition-colors">
+                    <button type="submit"
+                        class="bg-accent text-white px-3 py-2 rounded-lg text-xs font-medium hover:opacity-90 transition-opacity"><i
+                            class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+        <div
+            class="max-w-7xl mx-auto px-5 mt-12 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400">
+            <p>© 2026 WELLORA. Nourish Your Life. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="contact.html" class="hover:text-accent transition-colors">Privacy Policy</a>
+                <a href="contact.html" class="hover:text-accent transition-colors">Terms of Service</a>
+                <a href="contact.html" class="hover:text-accent transition-colors">Cookie Settings</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            const html = document.documentElement;
+            // Theme toggles
+            const themeBtn = document.getElementById('theme-toggle'), mobileTheme = document.getElementById('mobile-theme-btn');
+            const applyTheme = (theme) => { html.setAttribute('data-theme', theme); localStorage.setItem('theme', theme); document.querySelectorAll('.light-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'dark')); document.querySelectorAll('.dark-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'light')); };
+            const initTheme = () => { const stored = localStorage.getItem('theme'); const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches; applyTheme(stored === 'dark' || (!stored && prefers) ? 'dark' : 'light'); };
+            const toggleTheme = () => { const cur = html.getAttribute('data-theme'); applyTheme(cur === 'light' ? 'dark' : 'light'); };
+            themeBtn?.addEventListener('click', toggleTheme); if (mobileTheme) mobileTheme.addEventListener('click', toggleTheme);
+            initTheme();
+            // RTL
+            const langBtn = document.getElementById('lang-icon'), mobileRtl = document.getElementById('mobile-rtl-btn');
+            const toggleRtl = () => { const isRtl = html.getAttribute('dir') === 'rtl'; html.setAttribute('dir', isRtl ? 'ltr' : 'rtl'); localStorage.setItem('dir', isRtl ? 'ltr' : 'rtl'); };
+            if (langBtn) langBtn.addEventListener('click', toggleRtl);
+            if (mobileRtl) mobileRtl.addEventListener('click', toggleRtl);
+            const savedDir = localStorage.getItem('dir') === 'rtl' ? 'rtl' : 'ltr'; html.setAttribute('dir', savedDir);
+            // dropdowns desktop
+            document.querySelectorAll('.dropdown-wrapper').forEach(drop => {
+                const btn = drop.querySelector('.dropdown-toggle');
+                if (window.innerWidth >= 1280) {
+                    drop.addEventListener('mouseenter', () => drop.classList.add('open'));
+                    drop.addEventListener('mouseleave', () => drop.classList.remove('open'));
+                } else {
+                    btn?.addEventListener('click', (e) => { e.preventDefault(); drop.classList.toggle('open'); });
+                }
+            });
+            document.addEventListener('click', (e) => { if (!e.target.closest('.dropdown-wrapper')) document.querySelectorAll('.dropdown-wrapper').forEach(d => d.classList.remove('open')); });
+            // Mobile drawer
+            const drawer = document.getElementById('mobile-drawer'), backdrop = document.getElementById('drawer-backdrop'), panel = document.getElementById('drawer-panel'), openBtn = document.getElementById('mobile-menu-open'), closeBtn = document.getElementById('drawer-close');
+            const openDrawer = () => { drawer.classList.remove('pointer-events-none'); panel.classList.remove('-translate-x-full'); backdrop.classList.add('opacity-100', 'pointer-events-auto'); document.body.style.overflow = 'hidden'; };
+            const closeDrawer = () => { panel.classList.add('-translate-x-full'); backdrop.classList.remove('opacity-100', 'pointer-events-auto'); setTimeout(() => drawer.classList.add('pointer-events-none'), 300); document.body.style.overflow = ''; };
+            openBtn?.addEventListener('click', openDrawer); closeBtn?.addEventListener('click', closeDrawer); backdrop?.addEventListener('click', closeDrawer);
+            document.getElementById('mobile-home-toggle')?.addEventListener('click', () => { document.getElementById('mobile-home-submenu')?.classList.toggle('hidden'); });
+            document.getElementById('mobile-dashboard-toggle')?.addEventListener('click', () => { document.getElementById('mobile-dashboard-submenu')?.classList.toggle('hidden'); });
+            // reveal animation
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); }); }, { threshold: 0.15 });
+            reveals.forEach(r => observer.observe(r));
+            // Add active nav based on hash
+            const navLinks = document.querySelectorAll('.nav-link, .dropdown-menu a, #mobile-drawer a');
+            navLinks.forEach(link => { link.addEventListener('click', function (e) { if (this.getAttribute('href')?.startsWith('#')) e.preventDefault(); window.location.hash = this.getAttribute('href')?.slice(1) || ''; }); });
+
+            // Dynamic Active Page Highlighter (Desktop & Mobile)
+            const currentPath = window.location.pathname;
+            let currentPage = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+            if (!currentPage || currentPage === '/') currentPage = 'index.html';
+
+            // 1. Clean slate: clear all hardcoded active classes
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.dropdown-toggle').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.dropdown-menu a').forEach(link => link.classList.remove('text-accent', 'font-medium'));
+            
+            const mobileDrawer = document.getElementById('mobile-drawer');
+            if (mobileDrawer) {
+                mobileDrawer.querySelectorAll('a').forEach(link => {
+                    link.classList.remove('active', 'text-accent', 'font-medium');
+                });
+                mobileDrawer.querySelectorAll('button').forEach(btn => {
+                    btn.classList.remove('text-accent');
+                });
+                // Reset submenus to hidden
+                const dbSub = document.getElementById('mobile-dashboard-submenu');
+                if (dbSub) dbSub.classList.add('hidden');
+                const homeSub = document.getElementById('mobile-home-submenu');
+                if (homeSub) homeSub.classList.add('hidden');
+            }
+
+            // 2. Desktop Highlighting
+            let desktopMatched = false;
+            document.querySelectorAll('.dropdown-menu a').forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === currentPage) {
+                    link.classList.add('text-accent', 'font-medium');
+                    const wrapper = link.closest('.dropdown-wrapper');
+                    if (wrapper) {
+                        const toggle = wrapper.querySelector('.dropdown-toggle');
+                        if (toggle) toggle.classList.add('active');
+                    }
+                    desktopMatched = true;
+                }
+            });
+
+            if (!desktopMatched) {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    const wrapper = link.closest('.dropdown-wrapper');
+                    if (!wrapper) {
+                        const href = link.getAttribute('href');
+                        if (href === currentPage) {
+                            link.classList.add('active');
+                        }
+                    }
+                });
+            }
+
+            // 3. Mobile Highlighting
+            if (mobileDrawer) {
+                let mobileMatched = false;
+                mobileDrawer.querySelectorAll('a').forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href === currentPage) {
+                        link.classList.add('active');
+                        if (!link.classList.contains('rounded-full')) {
+                            link.classList.add('text-accent', 'font-medium');
+                        }
+                        
+                        // Handle parents/submenus
+                        const homeSubmenu = document.getElementById('mobile-home-submenu');
+                        const dashboardSubmenu = document.getElementById('mobile-dashboard-submenu');
+                        
+                        if (homeSubmenu && homeSubmenu.contains(link)) {
+                            const homeToggle = document.getElementById('mobile-home-toggle');
+                            if (homeToggle) homeToggle.classList.add('text-accent');
+                            homeSubmenu.classList.remove('hidden');
+                        } else if (dashboardSubmenu && dashboardSubmenu.contains(link)) {
+                            const dashboardToggle = document.getElementById('mobile-dashboard-toggle');
+                            if (dashboardToggle) dashboardToggle.classList.add('text-accent');
+                            dashboardSubmenu.classList.remove('hidden');
+                        }
+                        mobileMatched = true;
+                    }
+                });
+
+                // Fallback for index.html / home2.html / empty path
+                if (!mobileMatched && (currentPage === 'index.html' || currentPage === 'home2.html')) {
+                    const homeToggle = document.getElementById('mobile-home-toggle');
+                    if (homeToggle) homeToggle.classList.add('text-accent');
+                    const homeSubmenu = document.getElementById('mobile-home-submenu');
+                    if (homeSubmenu) homeSubmenu.classList.remove('hidden');
+                    
+                    const matchingLink = mobileDrawer.querySelector(`a[href="${currentPage}"]`);
+                    if (matchingLink) {
+                        matchingLink.classList.add('active', 'text-accent', 'font-medium');
+                    }
+                }
+            }
+        })();
+    </script>
+    <!-- home2.html redirect simulation: if path includes home2.html, just update theme but fully functional -->
+    <script>
+        // MOCK support for home2 version (just stays same design but content identical, but we respect current page path)
+        if (window.location.pathname.includes('home2.html')) { document.title = "WELLORASwift | Performance Pro Edition"; }
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

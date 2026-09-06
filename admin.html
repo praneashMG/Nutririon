@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+
+    <title>Admin Dashboard | WELLORA Nutrition</title>
+
+    <script src="tailwind.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        accent: 'var(--color-accent)',
+                        'accent-light': 'var(--color-accent-light)',
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        /* --- exact palette from index.html (WELLORA) --- */
+        :root, html[data-theme='light'] {
+            --bg-body: #F7F9FC;
+            --text-primary: #0A1C2F;
+            --text-secondary: #2C3E50;
+            --accent: #527B55;
+            --accent-dark: #3E5E41;
+            --primary: #38523B;
+            --card-bg: #FFFFFF;
+            --border-light: #E2E8F0;
+            --hover-bg: #EDF2ED;
+            --footer-bg: #0F172A;
+            --footer-text: #E2E8F0;
+            --rating-star: #F59E0B;
+        }
+
+        html[data-theme='dark'] {
+            --bg-body: #0B1120;
+            --text-primary: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --accent: #8EBA93;
+            --accent-dark: #6B8E6E;
+            --primary: #527B55;
+            --card-bg: #1E293B;
+            --border-light: #334155;
+            --hover-bg: #212D23;
+            --footer-bg: #020617;
+            --footer-text: #CBD5E1;
+            --rating-star: #FBBF24;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+
+        .text-primary-text { color: var(--text-primary); }
+        .text-secondary-text { color: var(--text-secondary); }
+        .text-accent { color: var(--accent); }
+        .text-accent-light { color: var(--accent-dark); }
+        .bg-background { background-color: var(--bg-body); }
+        .bg-hover { background-color: var(--hover-bg); }
+        .border-border { border-color: var(--border-light); }
+        .bg-card-custom { background-color: var(--card-bg); }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 550 !important;
+        }
+        h1 { font-size: 2.25rem !important; }
+        @media (min-width: 640px) { h1 { font-size: 3.75rem !important; } }
+        h2 { font-size: 1.875rem !important; }
+        @media (min-width: 640px) { h2 { font-size: 2.25rem !important; } }
+        h3 { font-size: 1.25rem !important; }
+        @media (min-width: 640px) { h3 { font-size: 1.5rem !important; } }
+        p, .text-secondary-text { font-weight: 400 !important; }
+
+        .bg-custom-gradient {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+        .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        .dropdown-wrapper { position: relative; }
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            min-width: 220px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        .dropdown-wrapper:hover .dropdown-menu {
+            opacity: 1; visibility: visible; transform: translateY(0);
+            display: block;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 0.75rem 1.25rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .dropdown-menu a:last-child { border-bottom: none; }
+        .dropdown-menu a:hover {
+            background-color: var(--hover-bg);
+            color: var(--accent);
+            padding-left: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .dropdown-menu { position: static; display: none; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: none; }
+            .dropdown-wrapper:hover .dropdown-menu { display: block; }
+        }
+
+        .btn-primary, .book-btn {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .btn-primary:hover, .book-btn:hover {
+            opacity: 0.92;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(82, 123, 85, 0.35);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 12px rgba(82, 123, 85, 0.25);
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            border-radius: 1rem;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            direction: ltr !important;
+            justify-content: flex-start !important;
+        }
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: white;
+        }
+
+        #mobile-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 55;
+        }
+        #mobile-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @media (min-width: 1280px) {
+            #sidebar {
+                transform: translateX(0) !important;
+            }
+        }
+
+        p, h1, h2, h3, h4, h5, h6, span, li, td, th, input, select, textarea {
+            unicode-bidi: plaintext;
+            text-align: start;
+        }
+
+        /* health score badge */
+        .health-score {
+            background: var(--accent);
+            color: white;
+            border-radius: 999px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- TOP HEADER -->
+    <header class="fixed top-0 inset-x-0 z-50 bg-background border-b border-border h-[73px]">
+        <div class="px-3 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+            <div class="flex items-center gap-2 sm:gap-4">
+                <button id="mobile-menu-toggle" class="xl:hidden p-2 rounded-xl hover:bg-hover transition text-primary-text">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <a href="index.html" class="flex items-center gap-2.5">
+                    <img src="assets/logo.png" alt="WELLORA Logo" class="h-10 w-auto">
+                    <span class="text-xl sm:text-2xl font-serif font-black tracking-tight whitespace-nowrap" style="color: var(--accent);">WELLORA</span>
+                    <span class="text-xs uppercase tracking-widest font-semibold px-2 py-0.5 rounded bg-hover text-accent-light hidden sm:inline-block">Admin Suite</span>
+                </a>
+            </div>
+            <div class="flex items-center gap-2 sm:gap-4">
+                <button id="lang-toggle" class="p-2 rounded-full hover:bg-hover transition text-primary-text" title="Toggle Language Direction">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-width="2" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                    </svg>
+                </button>
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-hover transition text-primary-text" title="Toggle Theme Mode">
+                    <svg class="w-5 h-5 light-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg class="w-5 h-5 dark-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+                <div class="flex items-center gap-2 ps-2 sm:ps-3 border-s border-border">
+                    <div class="w-9 h-9 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">ND</div>
+                    <div class="hidden sm:block text-start">
+                        <p class="text-sm font-medium">Dr. Nina</p>
+                        <p class="text-xs text-secondary-text">Head Dietitian</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobile-overlay" class="xl:hidden"></div>
+
+    <div class="flex min-h-screen pt-[73px]">
+        <!-- ADMIN SIDEBAR -->
+        <aside id="sidebar"
+            class="fixed top-0 xl:top-[73px] start-0 w-72 xl:w-64 h-full xl:h-[calc(100vh-73px)] z-[60] transform -translate-x-full rtl:translate-x-full xl:translate-x-0 transition-transform duration-300 bg-background border-e border-border overflow-y-auto shrink-0">
+            <div class="p-5">
+                <div class="flex xl:hidden justify-between items-center mb-6">
+                    <span class="font-bold text-accent font-serif">Admin Menu</span>
+                    <button id="close-sidebar" class="p-2 hover:bg-hover rounded-lg text-primary-text">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <nav class="flex flex-col gap-1">
+                    <p class="text-xs uppercase tracking-wider text-secondary-text px-3 mb-2">Operations</p>
+                    <a href="#" data-section="admin-overview" class="sidebar-link active">
+                        <i class="fa-solid fa-chart-line w-5"></i>
+                        <span>Overview</span>
+                    </a>
+                    <a href="#" data-section="admin-clients" class="sidebar-link">
+                        <i class="fa-solid fa-users w-5"></i>
+                        <span>Client Roster</span>
+                    </a>
+                    <a href="#" data-section="admin-plans" class="sidebar-link">
+                        <i class="fa-solid fa-clipboard-list w-5"></i>
+                        <span>Diet Plans Library</span>
+                    </a>
+                    <a href="#" data-section="admin-meals" class="sidebar-link">
+                        <i class="fa-solid fa-utensils w-5"></i>
+                        <span>Meal Logs & Tracking</span>
+                    </a>
+                    <a href="#" data-section="admin-appointments" class="sidebar-link">
+                        <i class="fa-solid fa-calendar-check w-5"></i>
+                        <span>Consultations</span>
+                    </a>
+                    <a href="#" data-section="admin-resources" class="sidebar-link">
+                        <i class="fa-solid fa-book-open w-5"></i>
+                        <span>Educational Library</span>
+                    </a>
+                    <a href="#" data-section="admin-inbox" class="sidebar-link">
+                        <i class="fa-solid fa-inbox w-5"></i>
+                        <span>Client Inbox</span>
+                        <span id="admin-chat-badge" class="hidden ms-auto w-2.5 h-2.5 bg-accent rounded-full"></span>
+                    </a>
+                    
+                    <p class="text-xs uppercase tracking-wider text-secondary-text px-3 mt-4 mb-2">Navigation</p>
+                    <a href="index.html" class="sidebar-link">
+                        <i class="fa-solid fa-house w-5"></i>
+                        <span>Back to Website</span>
+                    </a>
+                    <a href="userdash.html" class="sidebar-link">
+                        <i class="fa-solid fa-circle-user w-5"></i>
+                        <span>Go to Client Dash</span>
+                    </a>
+
+                    <a href="#" id="logoutBtn"
+                        class="sidebar-link mt-6 border-t border-border pt-4 text-red-600 hover:text-white hover:bg-red-600">
+                        <i class="fa-solid fa-right-from-bracket w-5"></i>
+                        <span>Logout</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- MAIN PANEL -->
+        <main class="flex-grow min-w-0 space-y-6 xl:ms-64 px-4 sm:px-6 lg:px-8 py-6">
+            
+            <!-- SECTION 1: Admin Overview -->
+            <section id="admin-overview" class="admin-section">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-black text-primary-text font-serif">Nutrition Control Center</h1>
+                    <p class="text-sm text-secondary-text mt-1">Manage active clients, diet plans, meal tracking, and consultation scheduling.</p>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                        <p class="text-xs uppercase tracking-wider text-secondary-text font-bold">Active Clients</p>
+                        <h3 class="text-3xl font-black text-accent mt-2 font-serif" id="stat-active-clients">12</h3>
+                        <span class="text-[10px] text-emerald-600 font-semibold"><i class="fas fa-caret-up me-1"></i> +3 this month</span>
+                    </div>
+                    <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                        <p class="text-xs uppercase tracking-wider text-secondary-text font-bold">Diet Plans Active</p>
+                        <h3 class="text-3xl font-black text-primary-text mt-2 font-serif">8</h3>
+                        <span class="text-[10px] text-secondary-text">Customized plans</span>
+                    </div>
+                    <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                        <p class="text-xs uppercase tracking-wider text-secondary-text font-bold">Upcoming Consultations</p>
+                        <h3 class="text-3xl font-black text-accent-light mt-2 font-serif">3</h3>
+                        <span class="text-[10px] text-secondary-text">This week</span>
+                    </div>
+                    <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                        <p class="text-xs uppercase tracking-wider text-secondary-text font-bold">Avg. Client Health Score</p>
+                        <h3 class="text-3xl font-black text-emerald-600 mt-2 font-serif">84%</h3>
+                        <span class="text-[10px] text-emerald-600 font-semibold"><i class="fas fa-arrow-trend-up me-1"></i> +6% vs last month</span>
+                    </div>
+                </div>
+
+                <!-- Visual Chart & Recent Activity -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-card-custom border border-border p-6 rounded-2xl shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-base text-primary-text font-serif border-b border-border pb-2 mb-4">Weekly Client Progress Trends</h4>
+                            
+                            <!-- Mock chart container -->
+                            <div class="h-48 flex items-end justify-between gap-2 pt-4 px-2">
+                                <div class="w-12 rounded-t-lg text-center text-[9px] font-bold text-accent pb-1" style="height: 45%; background-color: color-mix(in srgb, var(--accent) 20%, transparent)">Mon<br/>62%</div>
+                                <div class="w-12 rounded-t-lg text-center text-[9px] font-bold text-accent pb-1" style="height: 60%; background-color: color-mix(in srgb, var(--accent) 30%, transparent)">Tue<br/>68%</div>
+                                <div class="w-12 rounded-t-lg text-center text-[9px] font-bold text-accent pb-1" style="height: 70%; background-color: color-mix(in srgb, var(--accent) 40%, transparent)">Wed<br/>74%</div>
+                                <div class="w-12 rounded-t-lg text-center text-[9px] font-bold text-accent pb-1" style="height: 80%; background-color: color-mix(in srgb, var(--accent) 50%, transparent)">Thu<br/>79%</div>
+                                <div class="w-12 bg-custom-gradient rounded-t-lg text-center text-[9px] font-bold text-white pb-1" style="height: 92%">Fri<br/>86%</div>
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-secondary-text mt-4 text-center">Average daily adherence score across all active diet plans.</p>
+                    </div>
+
+                    <!-- Alerts -->
+                    <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                        <h4 class="font-bold text-base text-primary-text font-serif border-b border-border pb-2 mb-4">Recent Alerts</h4>
+                        <div class="space-y-3 text-xs" id="admin-alerts-container">
+                            <!-- Dynamic alerts -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: Client Roster -->
+            <section id="admin-clients" class="admin-section hidden">
+                <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg text-primary-text border-b border-border pb-4 mb-6 font-serif">Client Roster & Health Overview</h3>
+                    <p class="text-sm text-secondary-text mb-6">View all active clients, their current diet plan, health score, and last check-in date.</p>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-start border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-hover text-secondary-text uppercase font-bold border-b border-border">
+                                    <th class="p-4">Client Name</th>
+                                    <th class="p-4">Diet Plan</th>
+                                    <th class="p-4">Health Score</th>
+                                    <th class="p-4">Last Check-In</th>
+                                    <th class="p-4 text-center">Status</th>
+                                    <th class="p-4 text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-border" id="admin-clients-table-body">
+                                <!-- Dynamic clients table -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: Diet Plans Library -->
+            <section id="admin-plans" class="admin-section hidden">
+                <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg text-primary-text border-b border-border pb-4 mb-6 font-serif">Diet Plans Library</h3>
+                    <p class="text-sm text-secondary-text mb-6">Create, edit, or deactivate diet plans. Each plan includes day-by-day meal recommendations.</p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Add Plan Form -->
+                        <div class="lg:col-span-1 p-5 bg-hover border border-border rounded-xl space-y-4">
+                            <h4 class="font-bold text-sm text-primary-text font-serif border-b border-border pb-2">Create New Diet Plan</h4>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Plan Name</label>
+                                <input type="text" id="plan-add-name" placeholder="e.g. Metabolic Reset" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Caloric Target</label>
+                                <input type="text" id="plan-add-calories" placeholder="e.g. 1800 kcal" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Description</label>
+                                <textarea id="plan-add-desc" rows="3" placeholder="Key benefits and focus areas..." class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none"></textarea>
+                            </div>
+                            <button onclick="addNewDietPlan()" class="w-full btn-primary py-2.5 rounded-xl font-bold text-xs text-white shadow-md">
+                                Create Plan
+                            </button>
+                        </div>
+
+                        <!-- Active Plans List -->
+                        <div class="lg:col-span-2">
+                            <h4 class="font-bold text-sm text-primary-text border-b border-border pb-2 mb-3">Active Diet Plans</h4>
+                            <div class="space-y-3" id="admin-plans-list">
+                                <!-- Dynamic plans list -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: Meal Logs & Tracking -->
+            <section id="admin-meals" class="admin-section hidden">
+                <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg text-primary-text border-b border-border pb-4 mb-6 font-serif">Meal Logs & Daily Tracking</h3>
+                    <p class="text-sm text-secondary-text mb-6">View client meal logs, water intake, and weight tracking data.</p>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-start border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-hover text-secondary-text uppercase font-bold border-b border-border">
+                                    <th class="p-4">Client</th>
+                                    <th class="p-4">Date</th>
+                                    <th class="p-4">Breakfast</th>
+                                    <th class="p-4">Lunch</th>
+                                    <th class="p-4">Dinner</th>
+                                    <th class="p-4">Water (oz)</th>
+                                    <th class="p-4">Weight (lbs)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-border" id="admin-meals-table-body">
+                                <!-- Dynamic meal logs -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: Consultations -->
+            <section id="admin-appointments" class="admin-section hidden">
+                <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg text-primary-text border-b border-border pb-4 mb-6 font-serif">Consultation Scheduler</h3>
+                    <p class="text-sm text-secondary-text mb-6">Manage upcoming and past client consultation appointments.</p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 space-y-4">
+                            <h4 class="font-bold text-sm text-primary-text font-serif border-b border-border pb-2">Upcoming Consultations</h4>
+                            <div class="space-y-3" id="admin-appointments-list">
+                                <!-- Dynamic appointments -->
+                            </div>
+                        </div>
+                        <div class="p-5 bg-hover border border-border rounded-xl space-y-4">
+                            <h4 class="font-bold text-sm text-primary-text font-serif border-b border-border pb-2">Schedule New</h4>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Client Name</label>
+                                <input type="text" id="appt-client-name" placeholder="e.g. Sarah Jenkins" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Date & Time</label>
+                                <input type="datetime-local" id="appt-datetime" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Notes</label>
+                                <input type="text" id="appt-notes" placeholder="e.g. Follow-up on weight goals" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none" />
+                            </div>
+                            <button onclick="addNewAppointment()" class="w-full btn-primary py-2.5 rounded-xl font-bold text-xs text-white shadow-md">
+                                Schedule
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6: Educational Library -->
+            <section id="admin-resources" class="admin-section hidden">
+                <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg text-primary-text border-b border-border pb-4 mb-6 font-serif">Educational Library</h3>
+                    <p class="text-sm text-secondary-text mb-6">Manage articles, recipes, and nutrition guides shared with clients.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-5 bg-hover border border-border rounded-xl space-y-4">
+                            <h4 class="font-bold text-sm text-primary-text font-serif border-b border-border pb-2">Add New Resource</h4>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Title</label>
+                                <input type="text" id="resource-title" placeholder="e.g. Mediterranean Diet Guide" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Category</label>
+                                <select id="resource-category" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none">
+                                    <option value="recipe">Recipe</option>
+                                    <option value="article">Article</option>
+                                    <option value="guide">Guide</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Summary</label>
+                                <textarea id="resource-summary" rows="3" placeholder="Brief description..." class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none"></textarea>
+                            </div>
+                            <button onclick="addNewResource()" class="w-full btn-primary py-2.5 rounded-xl font-bold text-xs text-white shadow-md">
+                                Publish Resource
+                            </button>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-primary-text border-b border-border pb-2 mb-3">Published Resources</h4>
+                            <div class="space-y-3" id="admin-resources-list">
+                                <!-- Dynamic resources -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 7: Client Inbox -->
+            <section id="admin-inbox" class="admin-section hidden">
+                <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm flex flex-col justify-between h-[480px]">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-border pb-4 mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center font-bold text-accent">SJ</div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-primary-text" id="chat-client-title">Sarah Jenkins</h4>
+                                    <p class="text-xs text-secondary-text">Client (#C1024)</p>
+                                </div>
+                            </div>
+                            <span class="text-[10px] text-emerald-500 font-bold"><i class="fas fa-circle me-1 animate-pulse"></i> Online</span>
+                        </div>
+                        
+                        <!-- Messages Container -->
+                        <div class="space-y-4 h-[280px] overflow-y-auto pe-1 text-xs" id="admin-chat-messages">
+                            <!-- Dynamic messages -->
+                        </div>
+                    </div>
+
+                    <!-- Messenger Footer -->
+                    <div class="flex gap-2 pt-4 border-t border-border mt-2">
+                        <input type="text" id="admin-chat-input" placeholder="Type a response to Sarah..." class="flex-grow p-3 bg-hover border border-border rounded-xl text-xs text-primary-text focus:outline-none focus:ring-1 focus:ring-accent" />
+                        <button onclick="sendAdminChatMessage()" class="p-3 bg-custom-gradient text-white rounded-xl shadow-md"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="text-center text-xs text-secondary-text border-t border-border pt-8 pb-4 mt-6">
+                <p>© 2026 WELLORA Nutrition — Admin Suite Control Portal</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- SCRIPT LOGIC -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const html = document.documentElement;
+
+            // Shared State Initialization
+            const defaultState = {
+                clients: [
+                    { id: 1, name: "Sarah Jenkins", plan: "Weight Management", score: 78, lastCheckin: "2026-06-15", status: "Active" },
+                    { id: 2, name: "Michael Torres", plan: "Clinical Nutrition", score: 85, lastCheckin: "2026-06-14", status: "Active" },
+                    { id: 3, name: "David Lin", plan: "Sports Performance", score: 92, lastCheckin: "2026-06-13", status: "Active" },
+                ],
+                dietPlans: [
+                    { id: 1, name: "Weight Management", calories: "1800 kcal", desc: "Sustainable weight loss with macro-balanced meals.", active: true },
+                    { id: 2, name: "Clinical Nutrition", calories: "1900 kcal", desc: "Specialized diets for Diabetes, PCOS, Thyroid, and Gut Health.", active: true },
+                    { id: 3, name: "Sports Performance", calories: "2200 kcal", desc: "Pre and post-workout fuel optimization for athletes.", active: true },
+                ],
+                mealLogs: [
+                    { client: "Sarah Jenkins", date: "2026-06-15", breakfast: "Oatmeal & Berries", lunch: "Grilled Chicken Salad", dinner: "Salmon & Veggies", water: 64, weight: 152 },
+                    { client: "Michael Torres", date: "2026-06-15", breakfast: "Greek Yogurt", lunch: "Quinoa Bowl", dinner: "Turkey & Sweet Potato", water: 72, weight: 188 },
+                ],
+                appointments: [
+                    { id: 1, client: "Sarah Jenkins", datetime: "2026-06-20T10:00", notes: "Follow-up on weight goals" },
+                    { id: 2, client: "David Lin", datetime: "2026-06-21T14:30", notes: "Sports nutrition review" },
+                ],
+                resources: [
+                    { id: 1, title: "Mediterranean Diet Guide", category: "guide", summary: "A comprehensive guide to the Mediterranean diet." },
+                    { id: 2, title: "High-Protein Breakfast Recipes", category: "recipe", summary: "5 quick and delicious high-protein breakfast ideas." },
+                ],
+                messages: [
+                    { sender: "dietitian", text: "Hi Sarah! I reviewed your recent meal logs. Great job on the water intake!", time: "10:30 AM" },
+                    { sender: "client", text: "Thank you! I'm feeling more energetic already.", time: "10:45 AM" },
+                ]
+            };
+
+            function getDashboardState() {
+                let stateStr = localStorage.getItem('wellora_dashboard_state');
+                if (!stateStr) {
+                    localStorage.setItem('wellora_dashboard_state', JSON.stringify(defaultState));
+                    return defaultState;
+                }
+                return JSON.parse(stateStr);
+            }
+
+            function saveDashboardState(state) {
+                localStorage.setItem('wellora_dashboard_state', JSON.stringify(state));
+            }
+
+            // Theme Switcher
+            const applyTheme = (theme) => {
+                html.setAttribute('data-theme', theme);
+                html.classList.toggle('dark', theme === 'dark');
+                document.querySelectorAll('.light-icon').forEach(i => i.classList.toggle('hidden', theme === 'dark'));
+                document.querySelectorAll('.dark-icon').forEach(i => i.classList.toggle('hidden', theme === 'light'));
+            };
+            
+            document.getElementById('theme-toggle')?.addEventListener('click', () => {
+                const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                localStorage.setItem('theme', next);
+                applyTheme(next);
+            });
+            applyTheme(localStorage.getItem('theme') || 'light');
+
+            // Language direction
+            const setDirection = (dir) => {
+                html.setAttribute('dir', dir);
+                localStorage.setItem('language', dir === 'rtl' ? 'ar' : 'en');
+                const isSidebarOpen = sidebar && sidebar.classList.contains('translate-x-0');
+                if (sidebar && !isSidebarOpen) {
+                    if (dir === 'rtl') {
+                        sidebar.classList.add('translate-x-full');
+                        sidebar.classList.remove('-translate-x-full');
+                    } else {
+                        sidebar.classList.add('-translate-x-full');
+                        sidebar.classList.remove('translate-x-full');
+                    }
+                }
+            };
+
+            // Mobile menu toggling
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            const menuToggle = document.getElementById('mobile-menu-toggle');
+            const closeSidebar = document.getElementById('close-sidebar');
+
+            const toggleMobile = (open) => {
+                const isRtl = html.getAttribute('dir') === 'rtl';
+                if (open) {
+                    sidebar.classList.add('translate-x-0');
+                    sidebar.classList.remove('-translate-x-full', 'translate-x-full', 'rtl:translate-x-full');
+                } else {
+                    sidebar.classList.remove('translate-x-0');
+                    if (isRtl) {
+                        sidebar.classList.add('translate-x-full');
+                    } else {
+                        sidebar.classList.add('-translate-x-full');
+                    }
+                }
+                overlay.classList.toggle('active', open);
+                document.body.style.overflow = open ? 'hidden' : '';
+            };
+
+            setDirection(localStorage.getItem('language') === 'ar' ? 'rtl' : 'ltr');
+            document.getElementById('lang-toggle')?.addEventListener('click', () => {
+                setDirection(html.getAttribute('dir') === 'ltr' ? 'rtl' : 'ltr');
+            });
+
+            menuToggle?.addEventListener('click', () => toggleMobile(true));
+            closeSidebar?.addEventListener('click', () => toggleMobile(false));
+            overlay?.addEventListener('click', () => toggleMobile(false));
+
+            // Section Toggling (Sidebar tabs)
+            const sections = [
+                'admin-overview', 
+                'admin-clients', 
+                'admin-plans', 
+                'admin-meals', 
+                'admin-appointments', 
+                'admin-resources', 
+                'admin-inbox'
+            ];
+            const links = document.querySelectorAll('.sidebar-link');
+            
+            window.activateAdminSection = function (sectionId) {
+                sections.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('hidden');
+                });
+                const activeEl = document.getElementById(sectionId);
+                if (activeEl) activeEl.classList.remove('hidden');
+
+                links.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.section === sectionId) {
+                        link.classList.add('active');
+                    }
+                });
+
+                if (sectionId === 'admin-inbox') {
+                    document.getElementById('admin-chat-badge')?.classList.add('hidden');
+                }
+                
+                if (window.innerWidth < 1024) toggleMobile(false);
+                refreshAdminUI();
+            };
+
+            links.forEach(link => {
+                if (link.dataset.section) {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        activateAdminSection(link.dataset.section);
+                    });
+                }
+            });
+
+            // Logout Btn
+            document.getElementById("logoutBtn")?.addEventListener("click", (e) => {
+                e.preventDefault();
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = "login.html";
+            });
+
+            // RENDER CORE STATE TO ADMIN UI
+            function refreshAdminUI() {
+                const state = getDashboardState();
+
+                // Stats
+                document.getElementById('stat-active-clients').innerText = state.clients.length;
+
+                // Render alerts panel
+                renderAlertsPanel(state);
+
+                // Render Clients Table
+                renderClientsTable(state.clients);
+
+                // Render Diet Plans
+                renderDietPlans(state.dietPlans);
+
+                // Render Meal Logs
+                renderMealLogs(state.mealLogs);
+
+                // Render Appointments
+                renderAppointments(state.appointments);
+
+                // Render Resources
+                renderResources(state.resources);
+
+                // Render Chat Inbox
+                renderAdminChat(state.messages);
+            }
+
+            // 1. RENDER ALERTS PANEL
+            function renderAlertsPanel(state) {
+                const container = document.getElementById('admin-alerts-container');
+                if (!container) return;
+
+                const alerts = [];
+                
+                // Check for clients with low health score
+                state.clients.forEach(c => {
+                    if (c.score < 65) {
+                        alerts.push({ text: `Client <strong>${c.name}</strong> has a low health score (${c.score}%). Consider a check-in.`, color: 'bg-red-100 text-red-800' });
+                    }
+                });
+
+                // Check for upcoming appointments
+                const today = new Date();
+                const upcoming = state.appointments.filter(a => new Date(a.datetime) > today);
+                if (upcoming.length > 0) {
+                    alerts.push({ text: `${upcoming.length} consultation(s) scheduled for this week.`, color: 'bg-blue-100 text-blue-800' });
+                }
+
+                if (alerts.length === 0) {
+                    container.innerHTML = `<p class="text-xs text-secondary-text">No active alerts at this time.</p>`;
+                    return;
+                }
+
+                container.innerHTML = alerts.map(a => `
+                    <div class="p-3 rounded-lg border border-transparent ${a.color} flex items-start gap-2">
+                        <span class="mt-0.5"><i class="fas fa-bell"></i></span>
+                        <p class="leading-normal">${a.text}</p>
+                    </div>
+                `).join('');
+            }
+
+            // 2. RENDER CLIENTS TABLE
+            function renderClientsTable(clients) {
+                const tbody = document.getElementById('admin-clients-table-body');
+                if (!tbody) return;
+
+                if (clients.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-secondary-text">No active clients.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = clients.map(c => {
+                    const scoreColor = c.score >= 80 ? 'text-emerald-600' : c.score >= 60 ? 'text-amber-600' : 'text-red-600';
+                    const statusBadge = c.status === 'Active' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-700';
+                    return `
+                        <tr class="hover:bg-hover/30 transition">
+                            <td class="p-4 font-medium text-primary-text">${c.name}</td>
+                            <td class="p-4">${c.plan}</td>
+                            <td class="p-4 font-bold ${scoreColor}">${c.score}%</td>
+                            <td class="p-4">${c.lastCheckin}</td>
+                            <td class="p-4 text-center"><span class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${statusBadge}">${c.status}</span></td>
+                            <td class="p-4 text-end">
+                                <button onclick="viewClientDetail('${c.name}')" class="px-3.5 py-1.5 bg-accent text-white font-bold rounded-lg shadow-sm hover:opacity-90 text-[10px]">View</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            window.viewClientDetail = function(name) {
+                alert(`Viewing detail for client: ${name}. This would open the client's full profile.`);
+            };
+
+            // 3. RENDER DIET PLANS
+            function renderDietPlans(plans) {
+                const container = document.getElementById('admin-plans-list');
+                if (!container) return;
+
+                const activePlans = plans.filter(p => p.active);
+                if (activePlans.length === 0) {
+                    container.innerHTML = `<p class="text-xs text-secondary-text">No active diet plans.</p>`;
+                    return;
+                }
+
+                container.innerHTML = activePlans.map(p => `
+                    <div class="p-4 border border-border rounded-xl flex justify-between items-center">
+                        <div>
+                            <h5 class="font-bold text-sm text-primary-text">${p.name}</h5>
+                            <p class="text-[10px] text-secondary-text">${p.calories} · ${p.desc}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="togglePlanStatus(${p.id})" class="text-xs px-3 py-1 rounded-lg border border-border hover:bg-hover">${p.active ? 'Active' : 'Inactive'}</button>
+                            <button onclick="deleteDietPlan(${p.id})" class="text-xs px-3 py-1 rounded-lg text-red-600 hover:bg-red-50"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            window.addNewDietPlan = function() {
+                const name = document.getElementById('plan-add-name').value.trim();
+                const calories = document.getElementById('plan-add-calories').value.trim();
+                const desc = document.getElementById('plan-add-desc').value.trim();
+
+                if (!name || !calories || !desc) {
+                    alert('Please fill in all fields.');
+                    return;
+                }
+
+                const state = getDashboardState();
+                const newPlan = {
+                    id: Date.now(),
+                    name: name,
+                    calories: calories,
+                    desc: desc,
+                    active: true
+                };
+                state.dietPlans.push(newPlan);
+                saveDashboardState(state);
+                alert(`Success! Diet plan "${name}" created.`);
+                document.getElementById('plan-add-name').value = '';
+                document.getElementById('plan-add-calories').value = '';
+                document.getElementById('plan-add-desc').value = '';
+                refreshAdminUI();
+            };
+
+            window.togglePlanStatus = function(id) {
+                const state = getDashboardState();
+                const plan = state.dietPlans.find(p => p.id === id);
+                if (plan) {
+                    plan.active = !plan.active;
+                    saveDashboardState(state);
+                    refreshAdminUI();
+                }
+            };
+
+            window.deleteDietPlan = function(id) {
+                if (confirm('Delete this diet plan?')) {
+                    const state = getDashboardState();
+                    state.dietPlans = state.dietPlans.filter(p => p.id !== id);
+                    saveDashboardState(state);
+                    refreshAdminUI();
+                }
+            };
+
+            // 4. RENDER MEAL LOGS
+            function renderMealLogs(logs) {
+                const tbody = document.getElementById('admin-meals-table-body');
+                if (!tbody) return;
+
+                if (logs.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-secondary-text">No meal logs recorded.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = logs.map(log => `
+                    <tr class="hover:bg-hover/30 transition">
+                        <td class="p-4 font-medium text-primary-text">${log.client}</td>
+                        <td class="p-4">${log.date}</td>
+                        <td class="p-4">${log.breakfast}</td>
+                        <td class="p-4">${log.lunch}</td>
+                        <td class="p-4">${log.dinner}</td>
+                        <td class="p-4">${log.water} oz</td>
+                        <td class="p-4">${log.weight} lbs</td>
+                    </tr>
+                `).join('');
+            }
+
+            // 5. RENDER APPOINTMENTS
+            function renderAppointments(appointments) {
+                const container = document.getElementById('admin-appointments-list');
+                if (!container) return;
+
+                const upcoming = appointments.filter(a => new Date(a.datetime) > new Date());
+                if (upcoming.length === 0) {
+                    container.innerHTML = `<p class="text-xs text-secondary-text">No upcoming consultations.</p>`;
+                    return;
+                }
+
+                container.innerHTML = upcoming.map(a => {
+                    const dt = new Date(a.datetime);
+                    const dateStr = dt.toLocaleDateString();
+                    const timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    return `
+                        <div class="p-4 border border-border rounded-xl flex justify-between items-center">
+                            <div>
+                                <h5 class="font-bold text-sm text-primary-text">${a.client}</h5>
+                                <p class="text-[10px] text-secondary-text">${dateStr} at ${timeStr} · ${a.notes || 'No notes'}</p>
+                            </div>
+                            <button onclick="deleteAppointment(${a.id})" class="text-xs px-3 py-1 rounded-lg text-red-600 hover:bg-red-50"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            window.addNewAppointment = function() {
+                const client = document.getElementById('appt-client-name').value.trim();
+                const datetime = document.getElementById('appt-datetime').value;
+                const notes = document.getElementById('appt-notes').value.trim();
+
+                if (!client || !datetime) {
+                    alert('Please enter client name and date/time.');
+                    return;
+                }
+
+                const state = getDashboardState();
+                const newAppt = {
+                    id: Date.now(),
+                    client: client,
+                    datetime: datetime,
+                    notes: notes || 'No notes provided.'
+                };
+                state.appointments.push(newAppt);
+                saveDashboardState(state);
+                alert(`Consultation scheduled for ${client}.`);
+                document.getElementById('appt-client-name').value = '';
+                document.getElementById('appt-datetime').value = '';
+                document.getElementById('appt-notes').value = '';
+                refreshAdminUI();
+            };
+
+            window.deleteAppointment = function(id) {
+                if (confirm('Cancel this consultation?')) {
+                    const state = getDashboardState();
+                    state.appointments = state.appointments.filter(a => a.id !== id);
+                    saveDashboardState(state);
+                    refreshAdminUI();
+                }
+            };
+
+            // 6. RENDER RESOURCES
+            function renderResources(resources) {
+                const container = document.getElementById('admin-resources-list');
+                if (!container) return;
+
+                if (resources.length === 0) {
+                    container.innerHTML = `<p class="text-xs text-secondary-text">No resources published.</p>`;
+                    return;
+                }
+
+                container.innerHTML = resources.map(r => `
+                    <div class="p-4 border border-border rounded-xl flex justify-between items-center">
+                        <div>
+                            <h5 class="font-bold text-sm text-primary-text">${r.title}</h5>
+                            <p class="text-[10px] text-secondary-text">${r.category} · ${r.summary.substring(0, 40)}${r.summary.length > 40 ? '...' : ''}</p>
+                        </div>
+                        <button onclick="deleteResource(${r.id})" class="text-xs px-3 py-1 rounded-lg text-red-600 hover:bg-red-50"><i class="fas fa-trash"></i></button>
+                    </div>
+                `).join('');
+            }
+
+            window.addNewResource = function() {
+                const title = document.getElementById('resource-title').value.trim();
+                const category = document.getElementById('resource-category').value;
+                const summary = document.getElementById('resource-summary').value.trim();
+
+                if (!title || !summary) {
+                    alert('Please fill in all fields.');
+                    return;
+                }
+
+                const state = getDashboardState();
+                const newResource = {
+                    id: Date.now(),
+                    title: title,
+                    category: category,
+                    summary: summary
+                };
+                state.resources.push(newResource);
+                saveDashboardState(state);
+                alert(`Resource "${title}" published.`);
+                document.getElementById('resource-title').value = '';
+                document.getElementById('resource-summary').value = '';
+                refreshAdminUI();
+            };
+
+            window.deleteResource = function(id) {
+                if (confirm('Delete this resource?')) {
+                    const state = getDashboardState();
+                    state.resources = state.resources.filter(r => r.id !== id);
+                    saveDashboardState(state);
+                    refreshAdminUI();
+                }
+            };
+
+            // 7. CHAT
+            function renderAdminChat(messages) {
+                const container = document.getElementById('admin-chat-messages');
+                if (!container) return;
+
+                if (messages.length === 0) {
+                    container.innerHTML = `<p class="text-xs text-secondary-text text-center py-6">No messages with client.</p>`;
+                    return;
+                }
+
+                const activeSec = document.querySelector('.sidebar-link.active');
+                if (activeSec && activeSec.dataset.section === 'admin-inbox') {
+                    document.getElementById('admin-chat-badge')?.classList.add('hidden');
+                }
+
+                container.innerHTML = messages.map(msg => {
+                    const isDietitian = msg.sender === 'dietitian';
+                    const bgClass = isDietitian ? 'bg-accent/10 ms-auto text-end' : 'bg-hover me-auto text-start';
+                    const senderLabel = isDietitian ? 'You' : 'Sarah Jenkins';
+                    return `
+                        <div class="p-3 rounded-xl max-w-[85%] ${bgClass}">
+                            <p class="font-bold text-[10px] text-accent-light mb-1">${senderLabel}</p>
+                            <p class="text-primary-text leading-relaxed">${msg.text}</p>
+                            <span class="text-[8px] text-secondary-text block mt-1">${msg.time}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                container.scrollTop = container.scrollHeight;
+            }
+
+            window.sendAdminChatMessage = function() {
+                const input = document.getElementById('admin-chat-input');
+                const text = input.value.trim();
+                if (!text) return;
+
+                const state = getDashboardState();
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                const newMsg = {
+                    sender: "dietitian",
+                    text: text,
+                    time: timeStr
+                };
+
+                state.messages.push(newMsg);
+                saveDashboardState(state);
+                input.value = '';
+                refreshAdminUI();
+            };
+
+            document.getElementById('admin-chat-input')?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendAdminChatMessage();
+                }
+            });
+
+            // Cross-tab synchronization
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'wellora_dashboard_state') {
+                    refreshAdminUI();
+                }
+            });
+
+            // Run first UI draw
+            refreshAdminUI();
+        });
+    </script>
+</body>
+</html>

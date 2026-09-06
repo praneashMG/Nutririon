@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+
+    <title>Client Dashboard | WELLORA Nutrition</title>
+
+    <script src="tailwind.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        accent: 'var(--color-accent)',
+                        'accent-light': 'var(--color-accent-light)',
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        /* --- exact palette from index.html (WELLORA) --- */
+        :root, html[data-theme='light'] {
+            --bg-body: #F7F9FC;
+            --text-primary: #0A1C2F;
+            --text-secondary: #2C3E50;
+            --accent: #527B55;
+            --accent-dark: #3E5E41;
+            --primary: #38523B;
+            --card-bg: #FFFFFF;
+            --border-light: #E2E8F0;
+            --hover-bg: #EDF2ED;
+            --footer-bg: #0F172A;
+            --footer-text: #E2E8F0;
+            --rating-star: #F59E0B;
+        }
+
+        html[data-theme='dark'] {
+            --bg-body: #0B1120;
+            --text-primary: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --accent: #8EBA93;
+            --accent-dark: #6B8E6E;
+            --primary: #527B55;
+            --card-bg: #1E293B;
+            --border-light: #334155;
+            --hover-bg: #212D23;
+            --footer-bg: #020617;
+            --footer-text: #CBD5E1;
+            --rating-star: #FBBF24;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+
+        .text-primary-text { color: var(--text-primary); }
+        .text-secondary-text { color: var(--text-secondary); }
+        .text-accent { color: var(--accent); }
+        .text-accent-light { color: var(--accent-dark); }
+        .bg-background { background-color: var(--bg-body); }
+        .bg-hover { background-color: var(--hover-bg); }
+        .border-border { border-color: var(--border-light); }
+        .bg-card-custom { background-color: var(--card-bg); }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 550 !important;
+        }
+        h1 { font-size: 2.25rem !important; }
+        @media (min-width: 640px) { h1 { font-size: 3.75rem !important; } }
+        h2 { font-size: 1.875rem !important; }
+        @media (min-width: 640px) { h2 { font-size: 2.25rem !important; } }
+        h3 { font-size: 1.25rem !important; }
+        @media (min-width: 640px) { h3 { font-size: 1.5rem !important; } }
+        p, .text-secondary-text { font-weight: 400 !important; }
+
+        .bg-custom-gradient {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            opacity: 0.92;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(82, 123, 85, 0.35);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 12px rgba(82, 123, 85, 0.25);
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            border-radius: 1rem;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            direction: ltr !important;
+            justify-content: flex-start !important;
+        }
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: white;
+        }
+
+        #mobile-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 55;
+        }
+        #mobile-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @media (min-width: 1280px) {
+            #sidebar {
+                transform: translateX(0) !important;
+            }
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            height: 6px;
+            background: var(--border-light);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 999px;
+            transition: width 0.5s ease;
+        }
+
+        .meal-log-item {
+            border-left: 3px solid var(--accent);
+        }
+
+        /* Chart bars */
+        .chart-bar {
+            transition: height 0.6s ease;
+        }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- TOP HEADER -->
+    <header class="fixed top-0 inset-x-0 z-50 bg-background border-b border-border h-[73px]">
+        <div class="px-3 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+            <div class="flex items-center gap-2 sm:gap-4">
+                <button id="mobile-menu-toggle" class="xl:hidden p-2 rounded-xl hover:bg-hover transition text-primary-text">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <a href="index.html" class="flex items-center gap-2.5">
+                    <img src="assets/logo.png" alt="WELLORA Logo" class="h-10 w-auto">
+                    <span class="text-xl sm:text-2xl font-serif font-black tracking-tight whitespace-nowrap" style="color: var(--accent);">WELLORA</span>
+                    <span class="text-xs uppercase tracking-widest font-semibold px-2 py-0.5 rounded bg-hover text-accent-light hidden sm:inline-block">Client Portal</span>
+                </a>
+            </div>
+            <div class="flex items-center gap-2 sm:gap-4">
+                <button id="lang-toggle" class="p-2 rounded-full hover:bg-hover transition text-primary-text" title="Toggle Language Direction">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-width="2" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                    </svg>
+                </button>
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-hover transition text-primary-text" title="Toggle Theme Mode">
+                    <svg class="w-5 h-5 light-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg class="w-5 h-5 dark-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+                <div class="flex items-center gap-2 ps-2 sm:ps-3 border-s border-border">
+                    <div class="w-9 h-9 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">SJ</div>
+                    <div class="hidden sm:block text-start">
+                        <p class="text-sm font-medium">Sarah J.</p>
+                        <p class="text-xs text-secondary-text">Client since 2025</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobile-overlay" class="xl:hidden"></div>
+
+    <div class="flex min-h-screen pt-[73px]">
+        <!-- CLIENT SIDEBAR -->
+        <aside id="sidebar"
+            class="fixed top-0 xl:top-[73px] start-0 w-72 xl:w-64 h-full xl:h-[calc(100vh-73px)] z-[60] transform -translate-x-full rtl:translate-x-full xl:translate-x-0 transition-transform duration-300 bg-background border-e border-border overflow-y-auto shrink-0">
+            <div class="p-5">
+                <div class="flex xl:hidden justify-between items-center mb-6">
+                    <span class="font-bold text-accent font-serif">Menu</span>
+                    <button id="close-sidebar" class="p-2 hover:bg-hover rounded-lg text-primary-text">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <nav class="flex flex-col gap-1">
+                    <p class="text-xs uppercase tracking-wider text-secondary-text px-3 mb-2">MY WELLNESS</p>
+                    <a href="#" data-section="overview" class="sidebar-link active">
+                        <i class="fa-solid fa-chart-pie w-5"></i>
+                        <span>Overview</span>
+                    </a>
+                    <a href="#" data-section="plan" class="sidebar-link">
+                        <i class="fa-solid fa-clipboard-list w-5"></i>
+                        <span>My Diet Plan</span>
+                    </a>
+                    <a href="#" data-section="tracking" class="sidebar-link">
+                        <i class="fa-solid fa-utensils w-5"></i>
+                        <span>Meal & Water Tracking</span>
+                    </a>
+                    <a href="#" data-section="progress" class="sidebar-link">
+                        <i class="fa-solid fa-chart-line w-5"></i>
+                        <span>Progress & Metrics</span>
+                    </a>
+                    <a href="#" data-section="appointments" class="sidebar-link">
+                        <i class="fa-solid fa-calendar-check w-5"></i>
+                        <span>Consultations</span>
+                    </a>
+                    <a href="#" data-section="library" class="sidebar-link">
+                        <i class="fa-solid fa-book-open w-5"></i>
+                        <span>Educational Library</span>
+                    </a>
+                    
+                    <p class="text-xs uppercase tracking-wider text-secondary-text px-3 mt-4 mb-2">SUPPORT</p>
+                    <a href="index.html" class="sidebar-link">
+                        <i class="fa-solid fa-house w-5"></i>
+                        <span>Back to Website</span>
+                    </a>
+
+                    <a href="#" id="logoutBtn"
+                        class="sidebar-link mt-6 border-t border-border pt-4 text-red-600 hover:text-white hover:bg-red-600">
+                        <i class="fa-solid fa-right-from-bracket w-5"></i>
+                        <span>Logout</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- MAIN PANEL -->
+        <main class="flex-grow min-w-0 space-y-6 xl:ms-64 px-4 sm:px-6 lg:px-8 py-6">
+            
+            <!-- SECTION 1: Overview -->
+            <section id="overview" class="admin-section">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-black text-primary-text font-serif">Welcome back, Sarah 👋</h1>
+                    <p class="text-sm text-secondary-text mt-1">Here's a snapshot of your wellness journey. Keep up the great work!</p>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                        <p class="text-xs uppercase tracking-wider text-secondary-text font-bold">HEALTH SCORE</p>
+                        <h3 class="text-3xl font-black text-accent mt-2 font-serif" id="health-score-display">78%</h3>
+                        <span class="text-[10px] text-emerald-600 font-semibold"><i class="fas fa-caret-up me-1"></i> +6% this month</span>
+                    </div>
+                    <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                        <p class="text-xs uppercase tracking-wider text-secondary-text font-bold">Current Weight</p>
+                        <h3 class="text-3xl font-black text-primary-text mt-2 font-serif" id="weight-display">152 lbs</h3>
+                        <span class="text-[10px] text-emerald-600 font-semibold"><i class="fas fa-caret-down me-1"></i> -3 lbs this month</span>
+                    </div>
+                    <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                        <p class="text-xs uppercase tracking-wider text-secondary-text font-bold">Daily Water</p>
+                        <h3 class="text-3xl font-black text-accent-light mt-2 font-serif" id="water-display">64 oz</h3>
+                        <span class="text-[10px] text-secondary-text">Goal: 80 oz</span>
+                    </div>
+                    <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                        <p class="text-xs uppercase tracking-wider text-secondary-text font-bold">Meal Adherence</p>
+                        <h3 class="text-3xl font-black text-emerald-600 mt-2 font-serif" id="adherence-display">86%</h3>
+                        <span class="text-[10px] text-emerald-600 font-semibold"><i class="fas fa-caret-up me-1"></i> +12% vs last week</span>
+                    </div>
+                </div>
+
+                <!-- Weekly Progress Chart & Quick Actions -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                        <h4 class="font-bold text-base text-primary-text font-serif border-b border-border pb-2 mb-4">Weekly Progress</h4>
+                        <div class="h-48 flex items-end justify-between gap-2 pt-4 px-2" id="weekly-chart">
+                            <div class="flex flex-col items-center gap-1 flex-1">
+                                <div class="w-full max-w-12 rounded-t-lg text-center text-[9px] font-bold text-accent chart-bar" style="height: 45%; background-color: color-mix(in srgb, var(--accent) 20%, transparent); transition: height 0.6s ease;">62%</div>
+                                <span class="text-[10px] text-secondary-text">Mon</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1 flex-1">
+                                <div class="w-full max-w-12 rounded-t-lg text-center text-[9px] font-bold text-accent chart-bar" style="height: 60%; background-color: color-mix(in srgb, var(--accent) 30%, transparent);">68%</div>
+                                <span class="text-[10px] text-secondary-text">Tue</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1 flex-1">
+                                <div class="w-full max-w-12 rounded-t-lg text-center text-[9px] font-bold text-accent chart-bar" style="height: 70%; background-color: color-mix(in srgb, var(--accent) 40%, transparent);">74%</div>
+                                <span class="text-[10px] text-secondary-text">Wed</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1 flex-1">
+                                <div class="w-full max-w-12 rounded-t-lg text-center text-[9px] font-bold text-accent chart-bar" style="height: 80%; background-color: color-mix(in srgb, var(--accent) 50%, transparent);">79%</div>
+                                <span class="text-[10px] text-secondary-text">Thu</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1 flex-1">
+                                <div class="w-full max-w-12 bg-custom-gradient rounded-t-lg text-center text-[9px] font-bold text-white chart-bar" style="height: 92%;">86%</div>
+                                <span class="text-[10px] text-secondary-text">Fri</span>
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-secondary-text mt-4 text-center">Daily meal adherence score based on your logged meals.</p>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                        <h4 class="font-bold text-base text-primary-text font-serif border-b border-border pb-2 mb-4">Quick Actions</h4>
+                        <div class="space-y-3">
+                            <button onclick="activateSection('tracking')" class="w-full text-left p-3 bg-hover rounded-xl border border-border hover:border-accent transition text-sm font-medium flex items-center gap-3">
+                                <i class="fa-solid fa-utensils text-accent"></i> Log Today's Meals
+                            </button>
+                            <button onclick="activateSection('appointments')" class="w-full text-left p-3 bg-hover rounded-xl border border-border hover:border-accent transition text-sm font-medium flex items-center gap-3">
+                                <i class="fa-solid fa-calendar-plus text-accent"></i> Schedule Consultation
+                            </button>
+                            <button onclick="activateSection('plan')" class="w-full text-left p-3 bg-hover rounded-xl border border-border hover:border-accent transition text-sm font-medium flex items-center gap-3">
+                                <i class="fa-solid fa-clipboard-list text-accent"></i> View Diet Plan
+                            </button>
+                            <button onclick="activateSection('progress')" class="w-full text-left p-3 bg-hover rounded-xl border border-border hover:border-accent transition text-sm font-medium flex items-center gap-3">
+                                <i class="fa-solid fa-chart-line text-accent"></i> Update Weight
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: My Diet Plan -->
+            <section id="plan" class="admin-section hidden">
+                <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg text-primary-text border-b border-border pb-4 mb-6 font-serif">My Personalized Diet Plan</h3>
+                    <p class="text-sm text-secondary-text mb-6">Your day-by-day meal recommendations tailored to your goals.</p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-1 p-5 bg-hover border border-border rounded-xl space-y-4">
+                            <h4 class="font-bold text-sm text-primary-text font-serif border-b border-border pb-2">Plan Details</h4>
+                            <div>
+                                <p class="text-xs text-secondary-text">Plan Name</p>
+                                <p class="font-bold text-base text-primary-text" id="plan-name">Weight Management</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-secondary-text">Daily Calories</p>
+                                <p class="font-bold text-base text-primary-text" id="plan-calories">1,800 kcal</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-secondary-text">Macro Split</p>
+                                <p class="font-bold text-sm text-primary-text">40% Carbs · 30% Protein · 30% Fat</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-secondary-text">Focus Areas</p>
+                                <p class="text-sm text-primary-text">Sustainable weight loss, increased energy, balanced blood sugar</p>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-2">
+                            <h4 class="font-bold text-sm text-primary-text border-b border-border pb-2 mb-3">Today's Meal Recommendations</h4>
+                            <div class="space-y-3" id="plan-meals-list">
+                                <!-- Dynamic meal plan -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: Meal & Water Tracking -->
+            <section id="tracking" class="admin-section hidden">
+                <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg text-primary-text border-b border-border pb-4 mb-6 font-serif">Meal & Water Tracking</h3>
+                    <p class="text-sm text-secondary-text mb-6">Log your daily meals and water intake to stay on track.</p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Log Form -->
+                        <div class="p-5 bg-hover border border-border rounded-xl space-y-4">
+                            <h4 class="font-bold text-sm text-primary-text font-serif border-b border-border pb-2">Log Today's Meals</h4>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Meal Type</label>
+                                <select id="meal-type" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none">
+                                    <option value="breakfast">Breakfast</option>
+                                    <option value="lunch">Lunch</option>
+                                    <option value="dinner">Dinner</option>
+                                    <option value="snack">Snack</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Food Items</label>
+                                <input type="text" id="meal-items" placeholder="e.g. Oatmeal with berries" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Water Intake (oz)</label>
+                                <input type="number" id="water-intake" placeholder="e.g. 16" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none" />
+                            </div>
+                            <button onclick="logMeal()" class="w-full btn-primary py-2.5 rounded-xl font-bold text-xs text-white shadow-md">
+                                Log Meal
+                            </button>
+                        </div>
+
+                        <!-- Today's Logs -->
+                        <div>
+                            <h4 class="font-bold text-sm text-primary-text border-b border-border pb-2 mb-3">Today's Logs</h4>
+                            <div class="space-y-3" id="today-logs-list">
+                                <!-- Dynamic logs -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: Progress & Metrics -->
+            <section id="progress" class="admin-section hidden">
+                <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg text-primary-text border-b border-border pb-4 mb-6 font-serif">Progress & Metrics</h3>
+                    <p class="text-sm text-secondary-text mb-6">Track your weight and measurement progress over time.</p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2">
+                            <h4 class="font-bold text-sm text-primary-text border-b border-border pb-2 mb-3">Weight Trend</h4>
+                            <div class="bg-hover p-6 rounded-xl border border-border h-64 flex items-center justify-center">
+                                <div class="text-center text-secondary-text">
+                                    <i class="fa-solid fa-chart-line text-3xl text-accent mb-3 block"></i>
+                                    <p class="text-sm">Weight tracking chart would appear here.</p>
+                                    <p class="text-xs mt-1">Current: <span id="weight-trend-current">152</span> lbs · Goal: 140 lbs</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-primary-text border-b border-border pb-2 mb-3">Update Weight</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-secondary-text mb-1">Current Weight (lbs)</label>
+                                    <input type="number" id="weight-input" value="152" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none" />
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-secondary-text mb-1">Date</label>
+                                    <input type="date" id="weight-date" value="2026-06-15" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none" />
+                                </div>
+                                <button onclick="updateWeight()" class="w-full btn-primary py-2.5 rounded-xl font-bold text-xs text-white shadow-md">
+                                    Update Weight
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: Consultations -->
+            <section id="appointments" class="admin-section hidden">
+                <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg text-primary-text border-b border-border pb-4 mb-6 font-serif">My Consultations</h3>
+                    <p class="text-sm text-secondary-text mb-6">Schedule and manage your follow-up consultations with your dietitian.</p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2">
+                            <h4 class="font-bold text-sm text-primary-text border-b border-border pb-2 mb-3">Upcoming Consultations</h4>
+                            <div class="space-y-3" id="client-appointments-list">
+                                <!-- Dynamic appointments -->
+                            </div>
+                        </div>
+                        <div class="p-5 bg-hover border border-border rounded-xl space-y-4">
+                            <h4 class="font-bold text-sm text-primary-text font-serif border-b border-border pb-2">Request New Consultation</h4>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Preferred Date & Time</label>
+                                <input type="datetime-local" id="appt-datetime" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-secondary-text mb-1">Topics to Discuss</label>
+                                <input type="text" id="appt-topics" placeholder="e.g. Weight plateau, meal planning" class="w-full p-2.5 bg-background border border-border rounded-lg text-xs focus:outline-none" />
+                            </div>
+                            <button onclick="requestConsultation()" class="w-full btn-primary py-2.5 rounded-xl font-bold text-xs text-white shadow-md">
+                                Request Consultation
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6: Educational Library -->
+            <section id="library" class="admin-section hidden">
+                <div class="bg-card-custom border border-border p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg text-primary-text border-b border-border pb-4 mb-6 font-serif">Educational Library</h3>
+                    <p class="text-sm text-secondary-text mb-6">Access articles, recipes, and nutrition guides curated for you.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="client-resources-list">
+                        <!-- Dynamic resources -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="text-center text-xs text-secondary-text border-t border-border pt-8 pb-4 mt-6">
+                <p>© 2026 WELLORA Nutrition — Your Wellness Journey</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- SCRIPT LOGIC -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const html = document.documentElement;
+
+            // Shared State
+            const defaultState = {
+                user: {
+                    name: "Sarah Jenkins",
+                    plan: "Weight Management",
+                    calories: "1,800 kcal",
+                    healthScore: 78,
+                    weight: 152,
+                    waterGoal: 80,
+                    dailyWater: 64,
+                    adherence: 86
+                },
+                mealPlan: [
+                    { meal: "Breakfast", items: "Oatmeal with berries, 2 eggs", time: "8:00 AM" },
+                    { meal: "Lunch", items: "Grilled chicken salad, quinoa", time: "12:30 PM" },
+                    { meal: "Dinner", items: "Salmon, roasted vegetables, sweet potato", time: "7:00 PM" },
+                    { meal: "Snack", items: "Greek yogurt, almonds", time: "3:30 PM" },
+                ],
+                todayLogs: [
+                    { type: "breakfast", items: "Oatmeal with berries", water: 16, time: "8:15 AM" },
+                    { type: "lunch", items: "Grilled chicken salad", water: 12, time: "12:45 PM" },
+                ],
+                appointments: [
+                    { id: 1, date: "2026-06-20T10:00", topics: "Follow-up on weight goals", status: "upcoming" },
+                    { id: 2, date: "2026-06-10T14:30", topics: "Initial consultation", status: "past" },
+                ],
+                resources: [
+                    { id: 1, title: "Mediterranean Diet Guide", category: "guide", summary: "A comprehensive guide to the Mediterranean diet." },
+                    { id: 2, title: "High-Protein Breakfast Recipes", category: "recipe", summary: "5 quick and delicious high-protein breakfast ideas." },
+                    { id: 3, title: "Stress & Nutrition", category: "article", summary: "How stress affects your eating habits and what to do about it." },
+                ]
+            };
+
+            function getDashboardState() {
+                let stateStr = localStorage.getItem('wellora_client_state');
+                if (!stateStr) {
+                    localStorage.setItem('wellora_client_state', JSON.stringify(defaultState));
+                    return defaultState;
+                }
+                return JSON.parse(stateStr);
+            }
+
+            function saveDashboardState(state) {
+                localStorage.setItem('wellora_client_state', JSON.stringify(state));
+            }
+
+            // Theme Switcher
+            const applyTheme = (theme) => {
+                html.setAttribute('data-theme', theme);
+                html.classList.toggle('dark', theme === 'dark');
+                document.querySelectorAll('.light-icon').forEach(i => i.classList.toggle('hidden', theme === 'dark'));
+                document.querySelectorAll('.dark-icon').forEach(i => i.classList.toggle('hidden', theme === 'light'));
+            };
+            
+            document.getElementById('theme-toggle')?.addEventListener('click', () => {
+                const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                localStorage.setItem('theme', next);
+                applyTheme(next);
+            });
+            applyTheme(localStorage.getItem('theme') || 'light');
+
+            // Language direction
+            const setDirection = (dir) => {
+                html.setAttribute('dir', dir);
+                localStorage.setItem('language', dir === 'rtl' ? 'ar' : 'en');
+                const isSidebarOpen = sidebar && sidebar.classList.contains('translate-x-0');
+                if (sidebar && !isSidebarOpen) {
+                    if (dir === 'rtl') {
+                        sidebar.classList.add('translate-x-full');
+                        sidebar.classList.remove('-translate-x-full');
+                    } else {
+                        sidebar.classList.add('-translate-x-full');
+                        sidebar.classList.remove('translate-x-full');
+                    }
+                }
+            };
+
+            // Mobile menu toggling
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            const menuToggle = document.getElementById('mobile-menu-toggle');
+            const closeSidebar = document.getElementById('close-sidebar');
+
+            const toggleMobile = (open) => {
+                const isRtl = html.getAttribute('dir') === 'rtl';
+                if (open) {
+                    sidebar.classList.add('translate-x-0');
+                    sidebar.classList.remove('-translate-x-full', 'translate-x-full', 'rtl:translate-x-full');
+                } else {
+                    sidebar.classList.remove('translate-x-0');
+                    if (isRtl) {
+                        sidebar.classList.add('translate-x-full');
+                    } else {
+                        sidebar.classList.add('-translate-x-full');
+                    }
+                }
+                overlay.classList.toggle('active', open);
+                document.body.style.overflow = open ? 'hidden' : '';
+            };
+
+            setDirection(localStorage.getItem('language') === 'ar' ? 'rtl' : 'ltr');
+            document.getElementById('lang-toggle')?.addEventListener('click', () => {
+                setDirection(html.getAttribute('dir') === 'ltr' ? 'rtl' : 'ltr');
+            });
+
+            menuToggle?.addEventListener('click', () => toggleMobile(true));
+            closeSidebar?.addEventListener('click', () => toggleMobile(false));
+            overlay?.addEventListener('click', () => toggleMobile(false));
+
+            // Section Toggling
+            const sections = ['overview', 'plan', 'tracking', 'progress', 'appointments', 'library'];
+            const links = document.querySelectorAll('.sidebar-link');
+            
+            window.activateSection = function (sectionId) {
+                sections.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('hidden');
+                });
+                const activeEl = document.getElementById(sectionId);
+                if (activeEl) activeEl.classList.remove('hidden');
+
+                links.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.section === sectionId) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                if (window.innerWidth < 1024) toggleMobile(false);
+                refreshUI();
+            };
+
+            links.forEach(link => {
+                if (link.dataset.section) {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        activateSection(link.dataset.section);
+                    });
+                }
+            });
+
+            // Logout
+            document.getElementById("logoutBtn")?.addEventListener("click", (e) => {
+                e.preventDefault();
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = "login.html";
+            });
+
+            // RENDER UI
+            function refreshUI() {
+                const state = getDashboardState();
+                const user = state.user;
+
+                // Update stats
+                document.getElementById('health-score-display').innerText = `${user.healthScore}%`;
+                document.getElementById('weight-display').innerText = `${user.weight} lbs`;
+                document.getElementById('water-display').innerText = `${user.dailyWater} oz`;
+                document.getElementById('adherence-display').innerText = `${user.adherence}%`;
+                document.getElementById('weight-trend-current').innerText = user.weight;
+                document.getElementById('plan-name').innerText = user.plan;
+                document.getElementById('plan-calories').innerText = user.calories;
+                
+                // Render meal plan
+                renderMealPlan(state.mealPlan);
+                renderTodayLogs(state.todayLogs);
+                renderClientAppointments(state.appointments);
+                renderClientResources(state.resources);
+            }
+
+            // 1. RENDER MEAL PLAN
+            function renderMealPlan(plan) {
+                const container = document.getElementById('plan-meals-list');
+                if (!container) return;
+
+                if (plan.length === 0) {
+                    container.innerHTML = `<p class="text-xs text-secondary-text">No meal plan available.</p>`;
+                    return;
+                }
+
+                container.innerHTML = plan.map(m => `
+                    <div class="p-4 border border-border rounded-xl meal-log-item">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h5 class="font-bold text-sm text-primary-text">${m.meal}</h5>
+                                <p class="text-xs text-secondary-text">${m.items}</p>
+                            </div>
+                            <span class="text-[10px] text-secondary-text">${m.time}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // 2. RENDER TODAY'S LOGS
+            function renderTodayLogs(logs) {
+                const container = document.getElementById('today-logs-list');
+                if (!container) return;
+
+                if (logs.length === 0) {
+                    container.innerHTML = `<p class="text-xs text-secondary-text">No meals logged today.</p>`;
+                    return;
+                }
+
+                container.innerHTML = logs.map(log => `
+                    <div class="p-4 border border-border rounded-xl flex justify-between items-center">
+                        <div>
+                            <h5 class="font-bold text-sm text-primary-text capitalize">${log.type}</h5>
+                            <p class="text-xs text-secondary-text">${log.items}</p>
+                            <span class="text-[10px] text-secondary-text">${log.water} oz water</span>
+                        </div>
+                        <span class="text-[10px] text-secondary-text">${log.time}</span>
+                    </div>
+                `).join('');
+            }
+
+            // 3. LOG MEAL
+            window.logMeal = function() {
+                const type = document.getElementById('meal-type').value;
+                const items = document.getElementById('meal-items').value.trim();
+                const water = parseInt(document.getElementById('water-intake').value) || 0;
+
+                if (!items) {
+                    alert('Please enter food items.');
+                    return;
+                }
+
+                const state = getDashboardState();
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                const newLog = {
+                    type: type,
+                    items: items,
+                    water: water,
+                    time: timeStr
+                };
+
+                state.todayLogs.push(newLog);
+                state.user.dailyWater += water;
+                saveDashboardState(state);
+                
+                document.getElementById('meal-items').value = '';
+                document.getElementById('water-intake').value = '';
+                alert('Meal logged successfully!');
+                refreshUI();
+            };
+
+            // 4. UPDATE WEIGHT
+            window.updateWeight = function() {
+                const weight = parseFloat(document.getElementById('weight-input').value);
+                const date = document.getElementById('weight-date').value;
+
+                if (!weight || !date) {
+                    alert('Please enter weight and date.');
+                    return;
+                }
+
+                const state = getDashboardState();
+                state.user.weight = weight;
+                saveDashboardState(state);
+                alert(`Weight updated to ${weight} lbs on ${date}`);
+                refreshUI();
+            };
+
+            // 5. RENDER CLIENT APPOINTMENTS
+            function renderClientAppointments(appointments) {
+                const container = document.getElementById('client-appointments-list');
+                if (!container) return;
+
+                const upcoming = appointments.filter(a => a.status === 'upcoming');
+                if (upcoming.length === 0) {
+                    container.innerHTML = `<p class="text-xs text-secondary-text">No upcoming consultations.</p>`;
+                    return;
+                }
+
+                container.innerHTML = upcoming.map(a => {
+                    const dt = new Date(a.date);
+                    const dateStr = dt.toLocaleDateString();
+                    const timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    return `
+                        <div class="p-4 border border-border rounded-xl flex justify-between items-center">
+                            <div>
+                                <h5 class="font-bold text-sm text-primary-text">${dateStr} at ${timeStr}</h5>
+                                <p class="text-xs text-secondary-text">${a.topics}</p>
+                            </div>
+                            <span class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">Confirmed</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // 6. REQUEST CONSULTATION
+            window.requestConsultation = function() {
+                const datetime = document.getElementById('appt-datetime').value;
+                const topics = document.getElementById('appt-topics').value.trim();
+
+                if (!datetime || !topics) {
+                    alert('Please fill in all fields.');
+                    return;
+                }
+
+                const state = getDashboardState();
+                const newAppt = {
+                    id: Date.now(),
+                    date: datetime,
+                    topics: topics,
+                    status: 'upcoming'
+                };
+                state.appointments.push(newAppt);
+                saveDashboardState(state);
+                alert('Consultation request submitted! You will receive a confirmation shortly.');
+                document.getElementById('appt-datetime').value = '';
+                document.getElementById('appt-topics').value = '';
+                refreshUI();
+            };
+
+            // 7. RENDER CLIENT RESOURCES
+            function renderClientResources(resources) {
+                const container = document.getElementById('client-resources-list');
+                if (!container) return;
+
+                if (resources.length === 0) {
+                    container.innerHTML = `<p class="text-xs text-secondary-text">No resources available.</p>`;
+                    return;
+                }
+
+                const iconMap = {
+                    'recipe': 'utensils',
+                    'guide': 'book-open',
+                    'article': 'newspaper'
+                };
+
+                container.innerHTML = resources.map(r => `
+                    <div class="p-5 bg-hover border border-border rounded-xl">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent">
+                                <i class="fas fa-${iconMap[r.category] || 'file'}"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-sm text-primary-text">${r.title}</h5>
+                                <p class="text-xs text-secondary-text mt-1">${r.summary}</p>
+                                <span class="text-[10px] text-accent font-medium uppercase mt-2 block">${r.category}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Run first UI draw
+            refreshUI();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+
+<head>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>WELLORA | Nutrition & Diet</title>
+    <!-- Tailwind + FontAwesome -->
+    <script src="tailwind.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        /* ========== THEME VARIABLES (performance/vintage-modern) ========== */
+        :root,
+        html[data-theme='light'] {
+            --bg-body: #F7F9FC;
+            --text-primary: #0A1C2F;
+            --text-secondary: #2C3E50;
+            --accent: #527B55;
+            --accent-dark: #3E5E41;
+            --primary: #38523B;
+            --card-bg: #FFFFFF;
+            --border-light: #E2E8F0;
+            --hover-bg: #EDF2ED;
+            --footer-bg: #0F172A;
+            --footer-text: #E2E8F0;
+            --rating-star: #F59E0B;
+        }
+
+        html[data-theme='dark'] {
+            --bg-body: #0B1120;
+            --text-primary: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --accent: #8EBA93;
+            --accent-dark: #6B8E6E;
+            --primary: #527B55;
+            --card-bg: #1E293B;
+            --border-light: #334155;
+            --hover-bg: #212D23;
+            --footer-bg: #020617;
+            --footer-text: #CBD5E1;
+            --rating-star: #FBBF24;
+        }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.25s ease, color 0.2s;
+            overflow-x: hidden;
+        }
+
+        .text-accent {
+            color: var(--accent);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .border-accent {
+            border-color: var(--accent);
+        }
+
+        .hover\:bg-accent\/10:hover {
+            background-color: color-mix(in srgb, var(--accent) 10%, transparent);
+        }
+
+        .bg-card {
+            background-color: var(--card-bg);
+        }
+
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .border-border {
+            border-color: var(--border-light);
+        }
+
+        /* Navbar + glassmorphic */
+        #main-header nav {
+            background: var(--card-bg);
+            backdrop-filter: blur(0px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        html[data-theme='dark'] #main-header nav {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: 0.2s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Dropdown style */
+        .dropdown-wrapper {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 0.75rem;
+            min-width: 190px;
+            padding: 0.4rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .dropdown-wrapper.open .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 1rem;
+            color: var(--text-primary);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .dropdown-menu a:hover {
+            background: var(--hover-bg);
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        /* Tire comparison cards */
+        .tire-card {
+            transition: all 0.2s;
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .tire-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border-radius: 9999px;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: scale(1.02);
+        }
+
+        .btn-outline {
+            border: 1.5px solid var(--accent);
+            color: var(--accent);
+            border-radius: 9999px;
+            background: transparent;
+            transition: 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .rating-star {
+            color: var(--rating-star);
+        }
+
+        .status-badge {
+            background: #10b98120;
+            color: #10b981;
+            border-radius: 999px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .vehicle-track {
+            background: var(--card-bg);
+            border-left: 4px solid var(--accent);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        button:focus,
+        .dropdown-toggle:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .dropdown-toggle {
+            -webkit-appearance: none;
+            appearance: none;
+            border: none;
+            background: transparent;
+        }
+
+        @media (max-width: 1279px) {
+            .dropdown-menu {
+                position: static;
+                display: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                margin-top: 0.5rem;
+            }
+
+            .dropdown-wrapper.open .dropdown-menu {
+                display: block;
+            }
+        }
+
+        /* Mobile Drawer Link Hover & Active Underlines */
+        #mobile-drawer nav a:not(.rounded-full) {
+            position: relative;
+            transition: color 0.2s ease;
+            width: fit-content;
+        }
+
+        #mobile-drawer nav a.active:not(.rounded-full) {
+            color: var(--accent) !important;
+        }
+
+        #mobile-drawer nav a:not(.rounded-full)::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.2s ease;
+        }
+
+        #mobile-drawer nav a:not(.rounded-full):hover::after {
+            width: 100%;
+        }
+
+        /* RTL support for navigation spacing, underlines and menus */
+        html[dir="rtl"] #main-header .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+            margin-right: 2rem !important;
+            margin-left: 0 !important;
+        }
+        html[dir="rtl"] .dropdown-menu {
+            left: auto;
+            right: 0;
+        }
+        html[dir="rtl"] .dropdown-menu a:hover {
+            transform: translateX(-4px);
+        }
+        html[dir="rtl"] .hover\:translate-x-1:hover {
+            transform: translateX(-0.25rem) !important;
+        }
+        html[dir="rtl"] .nav-link::after {
+            left: auto;
+            right: 0;
+        }
+        html[dir="rtl"] #mobile-drawer nav a:not(.rounded-full)::after {
+            left: auto;
+            right: 0;
+        }
+    </style>
+    <style id="typography-alignment">
+        /* Typography Alignment & Consistency Overrides */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 500 !important;
+        }
+        /* Keep paragraph weights 400-500 */
+        p:not(.font-medium), div.text-secondary {
+            font-weight: 400 !important;
+        }
+        /* Ensure proper text alignment inside cards */
+        .tire-card, .bg-card, .card {
+            text-align: left !important;
+        }
+        .text-center .tire-card, .text-center .bg-card {
+            text-align: left !important;
+        }
+        /* Reduce overly wide paragraphs inside containers for readability */
+        .container p, section > div > p.text-secondary {
+            max-width: 65ch;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .tire-card p, .bg-card p, .card p, .text-left p {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            max-width: none !important;
+        }
+    </style>
+    <style id="cta-improvements">
+        /* Primary CTA Highlights */
+        .btn-primary {
+            box-shadow: 0 4px 12px 0 rgba(82, 123, 85, 0.4);
+            color: #ffffff !important;
+        }
+        html[data-theme='dark'] .btn-primary {
+            box-shadow: 0 4px 12px 0 rgba(142, 186, 147, 0.3);
+            color: #0f172a !important; /* High contrast in dark mode */
+            font-weight: 600 !important;
+        }
+        
+        /* Hover Color Consistency & Contrast */
+        .btn-primary:hover {
+            background-color: var(--accent-dark) !important;
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 6px 16px 0 rgba(82, 123, 85, 0.5);
+        }
+        html[data-theme='dark'] .btn-primary:hover {
+            box-shadow: 0 6px 16px 0 rgba(142, 186, 147, 0.4);
+        }
+        
+        .btn-outline {
+            color: var(--accent) !important;
+            border-color: var(--accent) !important;
+        }
+        .btn-outline:hover {
+            background-color: var(--accent) !important;
+            color: #ffffff !important;
+            transform: translateY(-1px);
+        }
+        html[data-theme='dark'] .btn-outline:hover {
+            color: #0f172a !important; /* High contrast in dark mode */
+        }
+    </style>
+    <style id="image-improvements">
+        /* Prevent image distortion globally */
+        img:not([src*="fav.png"]):not(.object-contain) {
+            object-fit: cover !important;
+        }
+        
+        /* Ensure proper background overlays for readability (apply to containers if needed) */
+        .bg-overlay {
+            position: relative;
+        }
+        .bg-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.95) 100%);
+            border-radius: inherit;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .bg-overlay > *:not(img) {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+    <style id="responsive-fixes">
+        /* Guarantee text wrapping on small screens */
+        body {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            -ms-word-break: break-all;
+            word-break: break-word;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Fixed Header -->
+    <header class="fixed top-0 left-0 w-full z-50 pt-3" id="main-header">
+        <nav
+            class="max-w-7xl mx-auto px-5 py-3 rounded-2xl flex items-center justify-between backdrop-blur-sm border border-border">
+            <a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;"><img src="assets/logo.png" alt="WELLORA Logo" class="h-10 w-auto">WELLORA</a>
+            <!-- Desktop Center Nav -->
+            <div class="hidden xl:flex items-center space-x-8 rtl:space-x-reverse text-sm font-medium">
+                <div class="dropdown-wrapper">
+                    <button class="nav-link active dropdown-toggle inline-flex items-center gap-1">
+                        <span>Home</span><i
+                            class="fas fa-chevron-down text-[10px] leading-none inline-block translate-y-[2.5px]"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="index.html" class="text-accent font-medium">Home 1</a>
+                        <a href="home2.html">Home 2</a>
+                    </div>
+                </div>
+                <a href="service.html" class="nav-link">Services</a>
+                <a href="plans.html" class="nav-link">Plans</a>
+                <a href="experts.html" class="nav-link">Our Experts</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <div class="dropdown-wrapper">
+                    <button class="nav-link dropdown-toggle inline-flex items-center gap-1">
+                        <span>Dashboard</span><i
+                            class="fas fa-chevron-down text-[10px] leading-none inline-block translate-y-[2.5px]"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="admin.html">Admin Dashboard</a>
+                        <a href="user.html">User Dashboard</a>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden xl:flex items-center gap-4">
+                <a href="login.html" class="btn-outline px-5 py-2 text-sm font-medium"><i class="fas fa-sign-in-alt mr-1"></i> Login</a>
+                <a href="signup.html" class="btn-primary px-5 py-2 text-sm font-medium"><i class="fas fa-user-plus mr-1"></i> Signup</a>
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-accent/10"><i
+                        class="fas fa-moon light-icon"></i><i class="fas fa-sun dark-icon hidden"></i></button>
+                <button id="lang-icon" class="p-2 rounded-full hover:bg-accent/10"><i class="fas fa-exchange-alt"></i></button>
+            </div>
+            <div class="xl:hidden flex items-center gap-3">
+                <button id="mobile-menu-open"><i class="fas fa-bars text-2xl"></i></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="fixed inset-0 z-50 pointer-events-none transition-all duration-300">
+        <div id="drawer-backdrop" class="absolute inset-0 bg-black/50 opacity-0 transition pointer-events-none"></div>
+        <div id="drawer-panel"
+            class="absolute top-0 left-0 w-80 h-full bg-card shadow-2xl transform -translate-x-full transition-transform duration-300 p-6 overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-border pb-4"><a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;; color: var(--accent) !important;"><img src="assets/logo.png" alt="WELLORA Logo" class="h-10 w-auto">WELLORA</a><button id="drawer-close"><i
+                        class="fas fa-times text-xl"></i></button></div>
+            <nav class="flex flex-col gap-3 mt-6">
+                <div><button id="mobile-home-toggle"
+                        class="flex w-full justify-between items-center py-2 font-medium text-accent">Home <i
+                            class="fas fa-chevron-down text-xs"></i></button>
+                    <div id="mobile-home-submenu" class="pl-4 flex flex-col gap-2 mt-1 border-l border-border">
+                        <a href="index.html" class="text-accent font-medium">Home 1</a><a href="home2.html">Home 2</a>
+                    </div>
+                </div>
+                <a href="service.html" class="py-2 font-medium">Services</a>
+                <a href="plans.html" class="py-2 font-medium">Plans</a>
+                <a href="experts.html" class="py-2 font-medium">Our Experts</a>
+                <a href="about.html" class="py-2 font-medium">About Us</a>
+                <a href="contact.html" class="py-2 font-medium">Contact</a>
+                <div><button id="mobile-dashboard-toggle"
+                        class="flex w-full justify-between items-center py-2 font-medium">Dashboard <i
+                            class="fas fa-chevron-down text-xs"></i></button>
+                    <div id="mobile-dashboard-submenu"
+                        class="hidden pl-4 flex flex-col gap-2 mt-1 border-l border-border">
+                        <a href="admin.html">Admin Dashboard</a><a href="user.html">User Dashboard</a>
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-border flex gap-3 mt-4">
+                    <a href="login.html"
+                        class="flex-1 text-center border border-accent rounded-full py-2 text-accent"><i
+                            class="fas fa-key mr-1"></i> Login</a>
+                    <a href="signup.html" class="flex-1 text-center bg-accent rounded-full py-2 text-white"><i
+                            class="fas fa-user-plus mr-1"></i> Signup</a>
+                </div>
+                <div class="flex justify-around mt-6 pt-2"><button id="mobile-theme-btn" class="p-2"><i
+                            class="fas fa-moon"></i> Theme</button><button id="mobile-rtl-btn" class="p-2"><i
+                            class="fas fa-exchange-alt"></i> RTL</button></div>
+            </nav>
+        </div>
+    </div>
+<main>
+    <!-- SECTION 1: HERO -->
+    <section class="relative overflow-hidden min-h-screen flex items-center justify-center pt-24 pb-16 border-b border-border text-center">
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=3840&q=100" class="w-full h-full object-cover" alt="Nutrition Plans">
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
+        </div>
+
+        <div class="max-w-4xl mx-auto px-5 relative z-10 reveal active w-full">
+            <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white border border-white/20 text-xs font-bold uppercase tracking-widest mb-6 shadow-sm backdrop-blur-md">
+                <i class="fas fa-tag text-[#8EBA93]"></i> Simple, Transparent Pricing
+            </span>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-medium leading-tight mb-6 text-white">
+                Invest in Your Health. <br> <span class="text-[#8EBA93]">Choose Your Path.</span>
+            </h1>
+            <p class="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
+                Select the tier that best fits your goals and lifestyle. Every plan includes full access to our intuitive client dashboard to track your meals, metrics, and milestones.
+            </p>
+        </div>
+    </section>
+
+    <!-- SECTION 2: PRICING CARDS -->
+    <section class="py-12 pb-24 max-w-7xl mx-auto px-5">
+        <!-- Billing Toggle -->
+        <div class="flex justify-center mb-12 reveal">
+            <div class="bg-[var(--hover-bg)] p-1.5 rounded-full border border-border inline-flex relative" id="pricing-toggle">
+                <button id="btn-monthly" class="px-6 py-2 rounded-full text-sm font-medium bg-card text-accent shadow-sm transition-all" onclick="togglePricing('monthly')">Monthly</button>
+                <button id="btn-quarterly" class="px-6 py-2 rounded-full text-sm font-medium text-secondary hover:text-accent transition-all" onclick="togglePricing('quarterly')">Quarterly <span class="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-1 font-bold">-15%</span></button>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch auto-rows-fr">
+            <!-- Basic Plan -->
+            <div class="tire-card p-8 bg-card border border-border rounded-3xl reveal flex flex-col h-full">
+                <h3 class="text-xl font-medium mb-2">Self-Guided</h3>
+                <p class="text-secondary text-sm mb-6 h-10">Perfect for self-starters who just need a solid plan and the right tools.</p>
+                <div class="mb-6 flex items-baseline gap-1">
+                    <span class="text-4xl font-bold">$<span class="price-val" data-monthly="49" data-quarterly="41">49</span></span><span class="text-secondary">/mo</span>
+                </div>
+                <ul class="space-y-4 text-sm mb-8 flex-grow">
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-accent mt-1"></i> <span>Customized monthly meal plan</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-accent mt-1"></i> <span>Full Dashboard access</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-accent mt-1"></i> <span>Basic macro & water tracking</span></li>
+                    <li class="flex items-start gap-3 text-secondary/50"><i class="fas fa-times mt-1"></i> <span>1-on-1 video consultations</span></li>
+                    <li class="flex items-start gap-3 text-secondary/50"><i class="fas fa-times mt-1"></i> <span>Direct chat support</span></li>
+                </ul>
+                <a href="signup.html" class="btn-outline w-full py-3 block text-center mt-auto">Get Started</a>
+            </div>
+
+            <!-- Pro Plan (Most Popular) -->
+            <div class="tire-card p-8 bg-card border-2 border-accent rounded-3xl relative shadow-xl transform lg:scale-105 z-10 reveal flex flex-col h-full" style="transition-delay: 100ms;">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-accent text-white text-xs font-bold px-4 py-1 rounded-full">MOST POPULAR</div>
+                <h3 class="text-xl font-medium mb-2 text-accent">Guided Transformation</h3>
+                <p class="text-secondary text-sm mb-6 h-10">Hands-on guidance and bi-weekly adjustments to ensure steady progress.</p>
+                <div class="mb-6 flex items-baseline gap-1">
+                    <span class="text-4xl font-bold">$<span class="price-val" data-monthly="129" data-quarterly="109">129</span></span><span class="text-secondary">/mo</span>
+                </div>
+                <ul class="space-y-4 text-sm mb-8 flex-grow">
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-accent mt-1"></i> <span>Everything in Self-Guided</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-accent mt-1"></i> <span>Two 30-min video calls per month</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-accent mt-1"></i> <span>Unlimited direct chat support</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-accent mt-1"></i> <span>Bi-weekly macro adjustments</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-accent mt-1"></i> <span>Advanced dashboard metrics</span></li>
+                </ul>
+                <a href="signup.html" class="btn-primary w-full py-3 block text-center mt-auto">Choose Pro</a>
+            </div>
+
+            <!-- Clinical Plan -->
+            <div class="tire-card p-8 bg-card border border-border rounded-3xl reveal flex flex-col h-full" style="transition-delay: 200ms;">
+                <h3 class="text-xl font-medium mb-2">Clinical Care</h3>
+                <p class="text-secondary text-sm mb-6 h-10">Specialized medical nutrition therapy for specific health conditions.</p>
+                <div class="mb-6 flex items-baseline gap-1">
+                    <span class="text-4xl font-bold">$<span class="price-val" data-monthly="199" data-quarterly="169">199</span></span><span class="text-secondary">/mo</span>
+                </div>
+                <ul class="space-y-4 text-sm mb-8 flex-grow">
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-accent mt-1"></i> <span>Everything in Pro Plan</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-accent mt-1"></i> <span>Bloodwork & lab analysis</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-accent mt-1"></i> <span>Physician coordination</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-accent mt-1"></i> <span>Weekly progress reviews</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-accent mt-1"></i> <span>Priority consultation booking</span></li>
+                </ul>
+                <a href="signup.html" class="btn-outline w-full py-3 block text-center mt-auto">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: INCLUDED IN ALL PLANS (Value Prop) -->
+    <section class="py-16 bg-[var(--hover-bg)]/50 border-y border-border">
+        <div class="max-w-7xl mx-auto px-5">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center reveal">
+                <!-- Feature 1 -->
+                <div>
+                    <div class="w-12 h-12 mx-auto bg-[var(--hover-bg)] text-accent border border-border rounded-full flex items-center justify-center text-xl mb-4"><i class="fas fa-mobile-alt"></i></div>
+                    <h4 class="font-medium text-lg mb-2">Wellora Dashboard</h4>
+                    <p class="text-secondary text-sm">Access your plan, track your metrics, and communicate with your dietitian from any device.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div style="transition-delay: 100ms;">
+                    <div class="w-12 h-12 mx-auto bg-[var(--hover-bg)] text-accent border border-border rounded-full flex items-center justify-center text-xl mb-4"><i class="fas fa-times-circle"></i></div>
+                    <h4 class="font-medium text-lg mb-2">Cancel Anytime</h4>
+                    <p class="text-secondary text-sm">No long-term commitments or hidden fees. We earn your business every single month.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div style="transition-delay: 200ms;">
+                    <div class="w-12 h-12 mx-auto bg-[var(--hover-bg)] text-accent border border-border rounded-full flex items-center justify-center text-xl mb-4"><i class="fas fa-shield-alt"></i></div>
+                    <h4 class="font-medium text-lg mb-2">Data Privacy</h4>
+                    <p class="text-secondary text-sm">Your health data is encrypted and HIPAA-compliant. We never sell your personal information.</p>
+                </div>
+                <!-- Feature 4 -->
+                <div style="transition-delay: 300ms;">
+                    <div class="w-12 h-12 mx-auto bg-[var(--hover-bg)] text-accent border border-border rounded-full flex items-center justify-center text-xl mb-4"><i class="fas fa-sync"></i></div>
+                    <h4 class="font-medium text-lg mb-2">Device Syncing</h4>
+                    <p class="text-secondary text-sm">Automatically sync steps, sleep, and workouts from Apple Health, Garmin, and Fitbit.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: FEATURE COMPARISON -->
+    <section class="py-16 md:py-24 max-w-5xl mx-auto px-5">
+        <div class="text-center reveal mb-12">
+            <h2 class="text-3xl font-medium mb-4">Compare Features</h2>
+            <p class="text-secondary">A detailed breakdown of what's included in each tier.</p>
+        </div>
+
+        <div class="bg-card rounded-3xl border border-border overflow-hidden reveal shadow-sm hidden md:block">
+            <!-- Table Header -->
+            <div class="grid grid-cols-4 bg-[var(--hover-bg)] p-4 border-b border-border font-medium text-sm">
+                <div class="col-span-1">Features</div>
+                <div class="text-center text-secondary">Self-Guided</div>
+                <div class="text-center text-accent font-bold">Guided Pro</div>
+                <div class="text-center text-secondary">Clinical Care</div>
+            </div>
+            
+            <!-- Table Rows -->
+            <div class="divide-y divide-border text-sm text-secondary">
+                <div class="grid grid-cols-4 p-4 items-center hover:bg-[var(--hover-bg)] transition-colors">
+                    <div class="font-medium text-primary">Custom Meal Plan</div>
+                    <div class="text-center"><i class="fas fa-check text-accent"></i></div>
+                    <div class="text-center"><i class="fas fa-check text-accent"></i></div>
+                    <div class="text-center"><i class="fas fa-check text-accent"></i></div>
+                </div>
+                <div class="grid grid-cols-4 p-4 items-center hover:bg-[var(--hover-bg)] transition-colors">
+                    <div class="font-medium text-primary">Dashboard Access</div>
+                    <div class="text-center"><i class="fas fa-check text-accent"></i></div>
+                    <div class="text-center"><i class="fas fa-check text-accent"></i></div>
+                    <div class="text-center"><i class="fas fa-check text-accent"></i></div>
+                </div>
+                <div class="grid grid-cols-4 p-4 items-center hover:bg-[var(--hover-bg)] transition-colors">
+                    <div class="font-medium text-primary">Chat Support</div>
+                    <div class="text-center text-secondary/40"><i class="fas fa-minus"></i></div>
+                    <div class="text-center">Unlimited</div>
+                    <div class="text-center">Unlimited Priority</div>
+                </div>
+                <div class="grid grid-cols-4 p-4 items-center hover:bg-[var(--hover-bg)] transition-colors">
+                    <div class="font-medium text-primary">Video Consultations</div>
+                    <div class="text-center text-secondary/40"><i class="fas fa-minus"></i></div>
+                    <div class="text-center">2x / month</div>
+                    <div class="text-center">4x / month</div>
+                </div>
+                <div class="grid grid-cols-4 p-4 items-center hover:bg-[var(--hover-bg)] transition-colors">
+                    <div class="font-medium text-primary">Plan Adjustments</div>
+                    <div class="text-center">Monthly</div>
+                    <div class="text-center">Bi-weekly</div>
+                    <div class="text-center">Weekly</div>
+                </div>
+                <div class="grid grid-cols-4 p-4 items-center hover:bg-[var(--hover-bg)] transition-colors">
+                    <div class="font-medium text-primary">Lab/Bloodwork Analysis</div>
+                    <div class="text-center text-secondary/40"><i class="fas fa-minus"></i></div>
+                    <div class="text-center text-secondary/40"><i class="fas fa-minus"></i></div>
+                    <div class="text-center"><i class="fas fa-check text-accent"></i></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile fallback table note -->
+        <div class="md:hidden text-center bg-card p-6 rounded-2xl border border-border text-sm text-secondary">
+            <i class="fas fa-mobile-alt text-2xl text-accent mb-3 block"></i>
+            Rotate your device or view on desktop to see the full detailed feature comparison table.
+        </div>
+    </section>
+
+    <!-- SECTION 5: FREQUENTLY ASKED QUESTIONS -->
+    <section class="py-16 bg-[var(--bg-body)]">
+        <div class="max-w-4xl mx-auto px-5">
+            <div class="text-center reveal mb-12">
+                <h2 class="text-3xl font-medium mb-4">Pricing <span class="text-accent">FAQ</span></h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 reveal auto-rows-fr">
+                <div class="bg-card p-6 rounded-2xl border border-border h-full flex flex-col">
+                    <h4 class="font-medium mb-2 text-primary"><i class="fas fa-question-circle text-accent mr-2"></i>Can I switch plans later?</h4>
+                    <p class="text-sm text-secondary flex-grow">Absolutely. You can upgrade or downgrade your plan at any time directly through your dashboard settings. Prorated charges will apply.</p>
+                </div>
+                <div class="bg-card p-6 rounded-2xl border border-border h-full flex flex-col">
+                    <h4 class="font-medium mb-2 text-primary"><i class="fas fa-question-circle text-accent mr-2"></i>Do you accept health insurance?</h4>
+                    <p class="text-sm text-secondary flex-grow">While we don't bill insurance directly, we provide super-bills upon request for our Clinical Care plan which you can submit for reimbursement.</p>
+                </div>
+                <div class="bg-card p-6 rounded-2xl border border-border h-full flex flex-col">
+                    <h4 class="font-medium mb-2 text-primary"><i class="fas fa-question-circle text-accent mr-2"></i>Is there a cancellation fee?</h4>
+                    <p class="text-sm text-secondary flex-grow">No hidden fees. You can cancel your monthly subscription anytime before your next billing cycle without any penalties.</p>
+                </div>
+                <div class="bg-card p-6 rounded-2xl border border-border h-full flex flex-col">
+                    <h4 class="font-medium mb-2 text-primary"><i class="fas fa-question-circle text-accent mr-2"></i>How does the dashboard work?</h4>
+                    <p class="text-sm text-secondary flex-grow">Once subscribed, you'll receive login credentials. The web-based dashboard works on any device and houses your meals, tracking graphs, and chat.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: CORPORATE & BOTTOM CTA -->
+    <section class="py-16 md:py-20 max-w-7xl mx-auto px-5 mb-10">
+        <div class="bg-card border border-border rounded-[2.5rem] overflow-hidden reveal shadow-xl flex flex-col lg:flex-row">
+            <!-- Corporate Pitch -->
+            <div class="lg:w-1/2 p-10 md:p-16 bg-[var(--hover-bg)] flex flex-col justify-center">
+                <span class="text-accent font-bold text-xs uppercase tracking-widest mb-3 block">Corporate & Groups</span>
+                <h3 class="text-3xl font-medium mb-4">Looking for a Team Solution?</h3>
+                <p class="text-secondary mb-8">
+                    Boost workplace wellness with our tailored corporate packages. Get discounted rates, aggregate team health analytics, and exclusive group webinars.
+                </p>
+                <ul class="space-y-3 text-sm text-secondary mb-8">
+                    <li><i class="fas fa-check-circle text-accent mr-2"></i> Custom dashboard branding</li>
+                    <li><i class="fas fa-check-circle text-accent mr-2"></i> Dedicated account manager</li>
+                </ul>
+                <a href="contact.html" class="btn-outline w-fit px-8 py-3">Contact Sales</a>
+            </div>
+            <!-- Final CTA -->
+            <div class="lg:w-1/2 p-10 md:p-16 bg-accent text-white flex flex-col justify-center text-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-white/5 backdrop-blur-sm"></div>
+                <div class="relative z-10">
+                    <h3 class="text-3xl font-medium mb-4">Ready to Begin?</h3>
+                    <p class="text-white/80 mb-8 max-w-sm mx-auto">
+                        Don't put your health on hold. Create your account today and unlock your personalized dashboard instantly.
+                    </p>
+                    <a href="signup.html" class="bg-white text-accent font-semibold px-8 py-4 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105 inline-block">
+                        Create Your Account
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+    <!-- Footer -->
+    <footer class="pt-16 pb-8 border-t border-slate-800"
+        style="background: var(--footer-bg); color: var(--footer-text);">
+        <div class="max-w-7xl mx-auto px-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+            <div class="col-span-2 md:col-span-2 lg:col-span-1">
+                <a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;"><img src="assets/logo.png" alt="WELLORA Logo" class="h-10 w-auto">WELLORA</a>
+                <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                    Premier online nutrition and diet consultation service. Personalized meal plans and expert guidance for a healthier you.
+                </p>
+                <div class="mt-4 space-y-2 text-xs text-slate-300">
+                    <p class="flex items-center gap-2"><i class="fas fa-phone text-accent"></i> (800) 555-WELL</p>
+                    <p class="flex items-center gap-2"><i class="far fa-clock text-accent"></i> Mon-Fri, 9am-6pm</p>
+                </div>
+                <div class="flex gap-2.5 mt-5">
+                    <a href="#"
+                        class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="#"
+                        class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i
+                            class="fab fa-facebook-f text-sm"></i></a>
+                    <a href="#"
+                        class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i
+                            class="fab fa-x-twitter"></i></a>
+                    <a href="#"
+                        class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i
+                            class="fab fa-linkedin-in text-sm"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Services</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="#services"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Weight Management</a></li>
+                    <li><a href="#services"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Clinical Nutrition</a></li>
+                    <li><a href="#services"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Sports Nutrition</a></li>
+                    <li><a href="#services"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Pediatric Nutrition</a></li>
+                    <li><a href="#services"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Corporate Wellness</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Support</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="contact.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Book Consultation</a></li>
+                    <li><a href="#faq"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Nutrition Guide</a></li>
+                    <li><a href="contact.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Cancellation Policy</a></li>
+                    <li><a href="contact.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Customer FAQ</a></li>
+                    <li><a href="contact.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Contact Center</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Company</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="#locations"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Our Clinics</a></li>
+                    <li><a href="index.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">About WELLORA</a></li>
+                    <li><a href="signup.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Careers</a>
+                    </li>
+                    <li><a href="login.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Partner Portal</a></li>
+                    <li><a href="contact.html"
+                            class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Press Kit</a></li>
+                </ul>
+            </div>
+            <div class="col-span-2 md:col-span-3 lg:col-span-1">
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Stay Connected</h4>
+                <p class="text-xs text-slate-400 mb-3 leading-relaxed">
+                    Subscribe for healthy recipes, diet tips, and exclusive seasonal offers.
+                </p>
+                <form class="flex gap-2 max-w-xs" onsubmit="event.preventDefault(); alert('Subscribed successfully!');">
+                    <input type="email" placeholder="Your email address" required
+                        class="bg-slate-800 border border-slate-700 text-white text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-accent transition-colors">
+                    <button type="submit"
+                        class="bg-accent text-white px-3 py-2 rounded-lg text-xs font-medium hover:opacity-90 transition-opacity"><i
+                            class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+        <div
+            class="max-w-7xl mx-auto px-5 mt-12 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400">
+            <p>© 2026 WELLORA. Nourish Your Life. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="contact.html" class="hover:text-accent transition-colors">Privacy Policy</a>
+                <a href="contact.html" class="hover:text-accent transition-colors">Terms of Service</a>
+                <a href="contact.html" class="hover:text-accent transition-colors">Cookie Settings</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            const html = document.documentElement;
+            // Theme toggles
+            const themeBtn = document.getElementById('theme-toggle'), mobileTheme = document.getElementById('mobile-theme-btn');
+            const applyTheme = (theme) => { html.setAttribute('data-theme', theme); localStorage.setItem('theme', theme); document.querySelectorAll('.light-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'dark')); document.querySelectorAll('.dark-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'light')); };
+            const initTheme = () => { const stored = localStorage.getItem('theme'); const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches; applyTheme(stored === 'dark' || (!stored && prefers) ? 'dark' : 'light'); };
+            const toggleTheme = () => { const cur = html.getAttribute('data-theme'); applyTheme(cur === 'light' ? 'dark' : 'light'); };
+            themeBtn?.addEventListener('click', toggleTheme); if (mobileTheme) mobileTheme.addEventListener('click', toggleTheme);
+            initTheme();
+            // RTL
+            const langBtn = document.getElementById('lang-icon'), mobileRtl = document.getElementById('mobile-rtl-btn');
+            const toggleRtl = () => { const isRtl = html.getAttribute('dir') === 'rtl'; html.setAttribute('dir', isRtl ? 'ltr' : 'rtl'); localStorage.setItem('dir', isRtl ? 'ltr' : 'rtl'); };
+            if (langBtn) langBtn.addEventListener('click', toggleRtl);
+            if (mobileRtl) mobileRtl.addEventListener('click', toggleRtl);
+            const savedDir = localStorage.getItem('dir') === 'rtl' ? 'rtl' : 'ltr'; html.setAttribute('dir', savedDir);
+            // dropdowns desktop
+            document.querySelectorAll('.dropdown-wrapper').forEach(drop => {
+                const btn = drop.querySelector('.dropdown-toggle');
+                if (window.innerWidth >= 1280) {
+                    drop.addEventListener('mouseenter', () => drop.classList.add('open'));
+                    drop.addEventListener('mouseleave', () => drop.classList.remove('open'));
+                } else {
+                    btn?.addEventListener('click', (e) => { e.preventDefault(); drop.classList.toggle('open'); });
+                }
+            });
+            document.addEventListener('click', (e) => { if (!e.target.closest('.dropdown-wrapper')) document.querySelectorAll('.dropdown-wrapper').forEach(d => d.classList.remove('open')); });
+            // Mobile drawer
+            const drawer = document.getElementById('mobile-drawer'), backdrop = document.getElementById('drawer-backdrop'), panel = document.getElementById('drawer-panel'), openBtn = document.getElementById('mobile-menu-open'), closeBtn = document.getElementById('drawer-close');
+            const openDrawer = () => { drawer.classList.remove('pointer-events-none'); panel.classList.remove('-translate-x-full'); backdrop.classList.add('opacity-100', 'pointer-events-auto'); document.body.style.overflow = 'hidden'; };
+            const closeDrawer = () => { panel.classList.add('-translate-x-full'); backdrop.classList.remove('opacity-100', 'pointer-events-auto'); setTimeout(() => drawer.classList.add('pointer-events-none'), 300); document.body.style.overflow = ''; };
+            openBtn?.addEventListener('click', openDrawer); closeBtn?.addEventListener('click', closeDrawer); backdrop?.addEventListener('click', closeDrawer);
+            document.getElementById('mobile-home-toggle')?.addEventListener('click', () => { document.getElementById('mobile-home-submenu')?.classList.toggle('hidden'); });
+            document.getElementById('mobile-dashboard-toggle')?.addEventListener('click', () => { document.getElementById('mobile-dashboard-submenu')?.classList.toggle('hidden'); });
+            // reveal animation
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); }); }, { threshold: 0.15 });
+            reveals.forEach(r => observer.observe(r));
+            // Add active nav based on hash
+            const navLinks = document.querySelectorAll('.nav-link, .dropdown-menu a, #mobile-drawer a');
+            navLinks.forEach(link => { link.addEventListener('click', function (e) { if (this.getAttribute('href')?.startsWith('#')) e.preventDefault(); window.location.hash = this.getAttribute('href')?.slice(1) || ''; }); });
+
+            // Dynamic Active Page Highlighter (Desktop & Mobile)
+            const currentPath = window.location.pathname;
+            let currentPage = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+            if (!currentPage || currentPage === '/') currentPage = 'index.html';
+
+            // 1. Clean slate: clear all hardcoded active classes
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.dropdown-toggle').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.dropdown-menu a').forEach(link => link.classList.remove('text-accent', 'font-medium'));
+            
+            const mobileDrawer = document.getElementById('mobile-drawer');
+            if (mobileDrawer) {
+                mobileDrawer.querySelectorAll('a').forEach(link => {
+                    link.classList.remove('active', 'text-accent', 'font-medium');
+                });
+                mobileDrawer.querySelectorAll('button').forEach(btn => {
+                    btn.classList.remove('text-accent');
+                });
+                // Reset submenus to hidden
+                const dbSub = document.getElementById('mobile-dashboard-submenu');
+                if (dbSub) dbSub.classList.add('hidden');
+                const homeSub = document.getElementById('mobile-home-submenu');
+                if (homeSub) homeSub.classList.add('hidden');
+            }
+
+            // 2. Desktop Highlighting
+            let desktopMatched = false;
+            document.querySelectorAll('.dropdown-menu a').forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === currentPage) {
+                    link.classList.add('text-accent', 'font-medium');
+                    const wrapper = link.closest('.dropdown-wrapper');
+                    if (wrapper) {
+                        const toggle = wrapper.querySelector('.dropdown-toggle');
+                        if (toggle) toggle.classList.add('active');
+                    }
+                    desktopMatched = true;
+                }
+            });
+
+            if (!desktopMatched) {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    const wrapper = link.closest('.dropdown-wrapper');
+                    if (!wrapper) {
+                        const href = link.getAttribute('href');
+                        if (href === currentPage) {
+                            link.classList.add('active');
+                        }
+                    }
+                });
+            }
+
+            // 3. Mobile Highlighting
+            if (mobileDrawer) {
+                let mobileMatched = false;
+                mobileDrawer.querySelectorAll('a').forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href === currentPage) {
+                        link.classList.add('active');
+                        if (!link.classList.contains('rounded-full')) {
+                            link.classList.add('text-accent', 'font-medium');
+                        }
+                        
+                        // Handle parents/submenus
+                        const homeSubmenu = document.getElementById('mobile-home-submenu');
+                        const dashboardSubmenu = document.getElementById('mobile-dashboard-submenu');
+                        
+                        if (homeSubmenu && homeSubmenu.contains(link)) {
+                            const homeToggle = document.getElementById('mobile-home-toggle');
+                            if (homeToggle) homeToggle.classList.add('text-accent');
+                            homeSubmenu.classList.remove('hidden');
+                        } else if (dashboardSubmenu && dashboardSubmenu.contains(link)) {
+                            const dashboardToggle = document.getElementById('mobile-dashboard-toggle');
+                            if (dashboardToggle) dashboardToggle.classList.add('text-accent');
+                            dashboardSubmenu.classList.remove('hidden');
+                        }
+                        mobileMatched = true;
+                    }
+                });
+
+                // Fallback for index.html / home2.html / empty path
+                if (!mobileMatched && (currentPage === 'index.html' || currentPage === 'home2.html')) {
+                    const homeToggle = document.getElementById('mobile-home-toggle');
+                    if (homeToggle) homeToggle.classList.add('text-accent');
+                    const homeSubmenu = document.getElementById('mobile-home-submenu');
+                    if (homeSubmenu) homeSubmenu.classList.remove('hidden');
+                    
+                    const matchingLink = mobileDrawer.querySelector(`a[href="${currentPage}"]`);
+                    if (matchingLink) {
+                        matchingLink.classList.add('active', 'text-accent', 'font-medium');
+                    }
+                }
+            }
+        })();
+    </script>
+    <!-- home2.html redirect simulation: if path includes home2.html, just update theme but fully functional -->
+    <script>
+        // MOCK support for home2 version (just stays same design but content identical, but we respect current page path)
+        if (window.location.pathname.includes('home2.html')) { document.title = "WELLORASwift | Performance Pro Edition"; }
+
+        // Pricing Toggle Logic
+        function togglePricing(interval) {
+            const btnMonthly = document.getElementById('btn-monthly');
+            const btnQuarterly = document.getElementById('btn-quarterly');
+            const prices = document.querySelectorAll('.price-val');
+            
+            if (interval === 'quarterly') {
+                btnQuarterly.classList.add('bg-card', 'text-accent', 'shadow-sm');
+                btnQuarterly.classList.remove('text-secondary');
+                
+                btnMonthly.classList.remove('bg-card', 'text-accent', 'shadow-sm');
+                btnMonthly.classList.add('text-secondary');
+                
+                prices.forEach(p => {
+                    p.innerText = p.getAttribute('data-quarterly');
+                });
+            } else {
+                btnMonthly.classList.add('bg-card', 'text-accent', 'shadow-sm');
+                btnMonthly.classList.remove('text-secondary');
+                
+                btnQuarterly.classList.remove('bg-card', 'text-accent', 'shadow-sm');
+                btnQuarterly.classList.add('text-secondary');
+                
+                prices.forEach(p => {
+                    p.innerText = p.getAttribute('data-monthly');
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

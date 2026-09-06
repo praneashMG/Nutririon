@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <title>Page Not Found | WELLORA Nutrition</title>
+    <script src="tailwind.js"></script>
+    <style>
+        /* --- exact palette from index.html (WELLORA) --- */
+        :root, html[data-theme='light'] {
+            --bg-body: #F7F9FC;
+            --text-primary: #0A1C2F;
+            --text-secondary: #2C3E50;
+            --accent: #527B55;
+            --accent-dark: #3E5E41;
+            --primary: #38523B;
+            --card-bg: #FFFFFF;
+            --border-light: #E2E8F0;
+            --hover-bg: #EDF2ED;
+            --rating-star: #F59E0B;
+        }
+
+        html[data-theme='dark'] {
+            --bg-body: #0B1120;
+            --text-primary: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --accent: #8EBA93;
+            --accent-dark: #6B8E6E;
+            --primary: #527B55;
+            --card-bg: #1E293B;
+            --border-light: #334155;
+            --hover-bg: #212D23;
+            --rating-star: #FBBF24;
+        }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.25s ease, color 0.2s;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 1rem;
+            overflow-x: hidden;
+        }
+
+        .text-accent { color: var(--accent); }
+        .text-secondary { color: var(--text-secondary); }
+        .bg-card { background-color: var(--card-bg); }
+        .bg-hover { background-color: var(--hover-bg); }
+        .border-border { border-color: var(--border-light); }
+
+        .bg-custom-gradient {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+        }
+
+        .logo-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 2rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+        .logo-link img {
+            height: 2.5rem;
+            width: auto;
+        }
+        .logo-link span {
+            color: var(--accent);
+        }
+
+        .error-code {
+            font-size: 8rem;
+            font-weight: 800;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: white;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            opacity: 0.92;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(82, 123, 85, 0.35);
+        }
+
+        .btn-outline {
+            border: 1.5px solid var(--accent);
+            color: var(--accent);
+            border-radius: 9999px;
+            background: transparent;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Floating Controls */
+        .controls {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            display: flex;
+            gap: 0.75rem;
+            z-index: 50;
+        }
+        html[dir="rtl"] .controls {
+            right: auto;
+            left: 1.5rem;
+        }
+
+        .btn-control {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .btn-control:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: scale(1.08);
+        }
+
+        @media (max-width: 480px) {
+            .error-code { font-size: 5rem; }
+            .logo-link { font-size: 1.5rem; }
+            .logo-link img { height: 2rem; }
+            .controls { top: 1rem; right: 1rem; gap: 0.5rem; }
+            .btn-control { width: 38px; height: 38px; }
+            html[dir="rtl"] .controls { right: auto; left: 1rem; }
+            .btn-primary, .btn-outline { padding: 0.6rem 1.5rem; font-size: 0.875rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Controls: RTL + Theme -->
+    <div class="controls">
+        <button onclick="toggleRTL()" class="btn-control" title="Toggle RTL / اللغة">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+            </svg>
+        </button>
+        <button onclick="toggleTheme()" class="btn-control" title="Toggle Dark Mode">
+            <svg class="w-5 h-5 light-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg class="w-5 h-5 dark-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Main 404 Content -->
+    <div class="text-center max-w-lg mx-auto px-4">
+        <!-- Logo -->
+        <a href="index.html" class="logo-link">
+            <img src="assets/logo.png" alt="WELLORA Logo">
+            <span>WELLORA</span>
+        </a>
+
+        <!-- Error Code -->
+        <div class="error-code mt-8">404</div>
+
+        <!-- Message -->
+        <h1 class="text-3xl md:text-4xl font-bold text-primary-text mt-4" style="font-family: 'Playfair Display', serif;">
+            Page Not Found
+        </h1>
+        <p class="text-secondary text-lg mt-3 max-w-sm mx-auto">
+            The page you're looking for doesn't exist or has been moved. Let's get you back on track.
+        </p>
+
+        <!-- Illustration -->
+        <div class="mt-6 text-6xl text-accent/30">
+            <i class="fas fa-heart-pulse"></i>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+            <a href="index.html" class="btn-primary">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+            <a href="contact.html" class="btn-outline">
+                <i class="fas fa-headset"></i> Need Help?
+            </a>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-secondary/60">
+            <a href="service.html" class="hover:text-accent transition">Services</a>
+            <span>·</span>
+            <a href="plans.html" class="hover:text-accent transition">Plans</a>
+            <span>·</span>
+            <a href="experts.html" class="hover:text-accent transition">Our Experts</a>
+            <span>·</span>
+            <a href="contact.html" class="hover:text-accent transition">Contact</a>
+        </div>
+
+        <!-- Footer note -->
+        <p class="mt-12 text-xs text-secondary/40">
+            © 2026 WELLORA — Nutrition & Diet Consultation
+        </p>
+    </div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const target = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', target);
+            localStorage.setItem('theme', target);
+
+            const lightIcons = document.querySelectorAll('.light-icon');
+            const darkIcons = document.querySelectorAll('.dark-icon');
+            if (target === 'dark') {
+                lightIcons.forEach(icon => icon.classList.add('hidden'));
+                darkIcons.forEach(icon => icon.classList.remove('hidden'));
+            } else {
+                lightIcons.forEach(icon => icon.classList.remove('hidden'));
+                darkIcons.forEach(icon => icon.classList.add('hidden'));
+            }
+        }
+
+        // RTL Toggle
+        function toggleRTL() {
+            const html = document.documentElement;
+            const current = html.getAttribute('dir');
+            const target = current === 'ltr' ? 'rtl' : 'ltr';
+            html.setAttribute('dir', target);
+            localStorage.setItem('dir', target);
+        }
+
+        // Initialize from localStorage
+        (function init() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const html = document.documentElement;
+            html.setAttribute('data-theme', savedTheme);
+
+            const lightIcons = document.querySelectorAll('.light-icon');
+            const darkIcons = document.querySelectorAll('.dark-icon');
+            if (savedTheme === 'dark') {
+                lightIcons.forEach(icon => icon.classList.add('hidden'));
+                darkIcons.forEach(icon => icon.classList.remove('hidden'));
+            } else {
+                lightIcons.forEach(icon => icon.classList.remove('hidden'));
+                darkIcons.forEach(icon => icon.classList.add('hidden'));
+            }
+
+            const savedDir = localStorage.getItem('dir') || 'ltr';
+            html.setAttribute('dir', savedDir);
+        })();
+    </script>
+</body>
+</html>
