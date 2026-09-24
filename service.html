@@ -441,7 +441,6 @@
                 </div>
             </div>
             <div class="hidden xl:flex items-center gap-4">
-                <a href="login.html" class="btn-outline px-5 py-2 text-sm font-medium"><i class="fas fa-sign-in-alt mr-1"></i> Login</a>
                 <a href="signup.html" class="btn-primary px-5 py-2 text-sm font-medium"><i class="fas fa-user-plus mr-1"></i> Signup</a>
                 <button id="theme-toggle" class="p-2 rounded-full hover:bg-[var(--hover-bg)]"><i
                         class="fas fa-moon light-icon"></i><i class="fas fa-sun dark-icon hidden"></i></button>
@@ -482,9 +481,6 @@
                     </div>
                 </div>
                 <div class="pt-4 border-t border-border flex gap-3 mt-4">
-                    <a href="login.html"
-                        class="flex-1 text-center border border-accent rounded-full py-2 text-accent"><i
-                            class="fas fa-key mr-1"></i> Login</a>
                     <a href="signup.html" class="flex-1 text-center bg-accent rounded-full py-2 text-white"><i
                             class="fas fa-user-plus mr-1"></i> Signup</a>
                 </div>
@@ -499,7 +495,7 @@
     <section class="relative overflow-hidden min-h-screen flex items-center justify-center pt-24 pb-16 border-b border-border text-center">
         <!-- Background Image -->
         <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=3840&q=100" class="w-full h-full object-cover" alt="Nutrition Services">
+            <img src="assets/vv.avif" class="w-full h-full object-cover" alt="Nutrition Services">
             <div class="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
         </div>
 
@@ -525,69 +521,81 @@
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
             <!-- Service 1 -->
-            <div class="tire-card p-8 bg-card border border-border rounded-3xl reveal hover:border-accent flex flex-col h-full">
-                <div class="w-14 h-14 bg-[var(--hover-bg)] text-accent rounded-2xl flex items-center justify-center text-2xl mb-6"><i class="fas fa-weight"></i></div>
-                <h3 class="text-xl font-medium mb-3">Weight Management</h3>
-                <p class="text-secondary text-sm mb-6 leading-relaxed flex-grow">Sustainable fat loss and muscle gain strategies without restrictive dieting. Learn portion control, healthy swaps, and mindful eating habits.</p>
-                <ul class="space-y-2 text-sm text-secondary mt-auto">
-                    <li><i class="fas fa-check text-accent mr-2"></i> Custom macro targets</li>
-                    <li><i class="fas fa-check text-accent mr-2"></i> Craving management</li>
-                </ul>
+            <div class="tire-card bg-card border border-border rounded-3xl reveal hover:border-accent flex flex-col h-full overflow-hidden">
+                <img src="assets/tr1.jpg" alt="Weight Management" class="w-full h-48 object-cover border-b border-border">
+                <div class="p-6 md:p-8 flex flex-col flex-grow">
+                    <h3 class="text-xl font-medium mb-3">Weight Management</h3>
+                    <p class="text-secondary text-sm mb-6 leading-relaxed flex-grow">Sustainable fat loss and muscle gain strategies without restrictive dieting. Learn portion control, healthy swaps, and mindful eating habits.</p>
+                    <ul class="space-y-2 text-sm text-secondary mt-auto">
+                        <li><i class="fas fa-check text-accent mr-2"></i> Custom macro targets</li>
+                        <li><i class="fas fa-check text-accent mr-2"></i> Craving management</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Service 2 -->
-            <div class="tire-card p-8 bg-card border border-border rounded-3xl reveal hover:border-accent flex flex-col h-full" style="transition-delay: 100ms;">
-                <div class="w-14 h-14 bg-[var(--hover-bg)] text-accent rounded-2xl flex items-center justify-center text-2xl mb-6"><i class="fas fa-heartbeat"></i></div>
-                <h3 class="text-xl font-medium mb-3">Clinical Nutrition</h3>
-                <p class="text-secondary text-sm mb-6 leading-relaxed flex-grow">Medical nutrition therapy for managing Diabetes, PCOS, Hypertension, Thyroid issues, and high cholesterol through dietary intervention.</p>
-                <ul class="space-y-2 text-sm text-secondary mt-auto">
-                    <li><i class="fas fa-check text-accent mr-2"></i> Bloodwork analysis</li>
-                    <li><i class="fas fa-check text-accent mr-2"></i> Medication interactions</li>
-                </ul>
+            <div class="tire-card bg-card border border-border rounded-3xl reveal hover:border-accent flex flex-col h-full overflow-hidden" style="transition-delay: 100ms;">
+                <img src="assets/tr2.jpg" alt="Clinical Nutrition" class="w-full h-48 object-cover border-b border-border">
+                <div class="p-6 md:p-8 flex flex-col flex-grow">
+                    <h3 class="text-xl font-medium mb-3">Clinical Nutrition</h3>
+                    <p class="text-secondary text-sm mb-6 leading-relaxed flex-grow">Medical nutrition therapy for managing Diabetes, PCOS, Hypertension, Thyroid issues, and high cholesterol through dietary intervention.</p>
+                    <ul class="space-y-2 text-sm text-secondary mt-auto">
+                        <li><i class="fas fa-check text-accent mr-2"></i> Bloodwork analysis</li>
+                        <li><i class="fas fa-check text-accent mr-2"></i> Medication interactions</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Service 3 -->
-            <div class="tire-card p-8 bg-card border border-border rounded-3xl reveal hover:border-accent flex flex-col h-full" style="transition-delay: 200ms;">
-                <div class="w-14 h-14 bg-[var(--hover-bg)] text-accent rounded-2xl flex items-center justify-center text-2xl mb-6"><i class="fas fa-running"></i></div>
-                <h3 class="text-xl font-medium mb-3">Sports Performance</h3>
-                <p class="text-secondary text-sm mb-6 leading-relaxed flex-grow">Fueling protocols for athletes and active individuals. Optimize your pre-workout energy, intra-workout stamina, and post-workout recovery.</p>
-                <ul class="space-y-2 text-sm text-secondary mt-auto">
-                    <li><i class="fas fa-check text-accent mr-2"></i> Carb-cycling plans</li>
-                    <li><i class="fas fa-check text-accent mr-2"></i> Supplement guidance</li>
-                </ul>
+            <div class="tire-card bg-card border border-border rounded-3xl reveal hover:border-accent flex flex-col h-full overflow-hidden" style="transition-delay: 200ms;">
+                <img src="assets/tr3.jpg" alt="Sports Performance" class="w-full h-48 object-cover border-b border-border">
+                <div class="p-6 md:p-8 flex flex-col flex-grow">
+                    <h3 class="text-xl font-medium mb-3">Sports Performance</h3>
+                    <p class="text-secondary text-sm mb-6 leading-relaxed flex-grow">Fueling protocols for athletes and active individuals. Optimize your pre-workout energy, intra-workout stamina, and post-workout recovery.</p>
+                    <ul class="space-y-2 text-sm text-secondary mt-auto">
+                        <li><i class="fas fa-check text-accent mr-2"></i> Carb-cycling plans</li>
+                        <li><i class="fas fa-check text-accent mr-2"></i> Supplement guidance</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Service 4 -->
-            <div class="tire-card p-8 bg-card border border-border rounded-3xl reveal hover:border-accent flex flex-col h-full">
-                <div class="w-14 h-14 bg-[var(--hover-bg)] text-accent rounded-2xl flex items-center justify-center text-2xl mb-6"><i class="fas fa-seedling"></i></div>
-                <h3 class="text-xl font-medium mb-3">Gut & Microbiome Health</h3>
-                <p class="text-secondary text-sm mb-6 leading-relaxed flex-grow">Relief from bloating, IBS, and digestive discomfort. We utilize elimination diets and low-FODMAP protocols to identify your unique triggers.</p>
-                <ul class="space-y-2 text-sm text-secondary mt-auto">
-                    <li><i class="fas fa-check text-accent mr-2"></i> Food sensitivity tracking</li>
-                    <li><i class="fas fa-check text-accent mr-2"></i> Probiotic optimization</li>
-                </ul>
+            <div class="tire-card bg-card border border-border rounded-3xl reveal hover:border-accent flex flex-col h-full overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=800&q=80" alt="Gut & Microbiome Health" class="w-full h-48 object-cover border-b border-border">
+                <div class="p-6 md:p-8 flex flex-col flex-grow">
+                    <h3 class="text-xl font-medium mb-3">Gut & Microbiome Health</h3>
+                    <p class="text-secondary text-sm mb-6 leading-relaxed flex-grow">Relief from bloating, IBS, and digestive discomfort. We utilize elimination diets and low-FODMAP protocols to identify your unique triggers.</p>
+                    <ul class="space-y-2 text-sm text-secondary mt-auto">
+                        <li><i class="fas fa-check text-accent mr-2"></i> Food sensitivity tracking</li>
+                        <li><i class="fas fa-check text-accent mr-2"></i> Probiotic optimization</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Service 5 -->
-            <div class="tire-card p-8 bg-card border border-border rounded-3xl reveal hover:border-accent flex flex-col h-full" style="transition-delay: 100ms;">
-                <div class="w-14 h-14 bg-[var(--hover-bg)] text-accent rounded-2xl flex items-center justify-center text-2xl mb-6"><i class="fas fa-baby-carriage"></i></div>
-                <h3 class="text-xl font-medium mb-3">Pre & Postnatal Diet</h3>
-                <p class="text-secondary text-sm mb-6 leading-relaxed flex-grow">Ensuring optimal nourishment for both mother and baby during pregnancy, and supporting healthy recovery and lactation postpartum.</p>
-                <ul class="space-y-2 text-sm text-secondary mt-auto">
-                    <li><i class="fas fa-check text-accent mr-2"></i> Trimester-specific needs</li>
-                    <li><i class="fas fa-check text-accent mr-2"></i> Safe postpartum weight loss</li>
-                </ul>
+            <div class="tire-card bg-card border border-border rounded-3xl reveal hover:border-accent flex flex-col h-full overflow-hidden" style="transition-delay: 100ms;">
+                <img src="assets/yt.jpg" alt="Pre & Postnatal Diet" class="w-full h-48 object-cover border-b border-border">
+                <div class="p-6 md:p-8 flex flex-col flex-grow">
+                    <h3 class="text-xl font-medium mb-3">Pre & Postnatal Diet</h3>
+                    <p class="text-secondary text-sm mb-6 leading-relaxed flex-grow">Ensuring optimal nourishment for both mother and baby during pregnancy, and supporting healthy recovery and lactation postpartum.</p>
+                    <ul class="space-y-2 text-sm text-secondary mt-auto">
+                        <li><i class="fas fa-check text-accent mr-2"></i> Trimester-specific needs</li>
+                        <li><i class="fas fa-check text-accent mr-2"></i> Safe postpartum weight loss</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Service 6 -->
-            <div class="tire-card p-8 bg-card border border-border rounded-3xl reveal hover:border-accent flex flex-col h-full" style="transition-delay: 200ms;">
-                <div class="w-14 h-14 bg-[var(--hover-bg)] text-accent rounded-2xl flex items-center justify-center text-2xl mb-6"><i class="fas fa-users"></i></div>
-                <h3 class="text-xl font-medium mb-3">Corporate Wellness</h3>
-                <p class="text-secondary text-sm mb-6 leading-relaxed flex-grow">Group seminars, team challenges, and executive health programs designed to boost workplace productivity and reduce absenteeism.</p>
-                <ul class="space-y-2 text-sm text-secondary mt-auto">
-                    <li><i class="fas fa-check text-accent mr-2"></i> Lunch & learn webinars</li>
-                    <li><i class="fas fa-check text-accent mr-2"></i> Team dashboard access</li>
-                </ul>
+            <div class="tire-card bg-card border border-border rounded-3xl reveal hover:border-accent flex flex-col h-full overflow-hidden" style="transition-delay: 200ms;">
+                <img src="assets/yy.jpg" alt="Corporate Wellness" class="w-full h-48 object-cover border-b border-border">
+                <div class="p-6 md:p-8 flex flex-col flex-grow">
+                    <h3 class="text-xl font-medium mb-3">Corporate Wellness</h3>
+                    <p class="text-secondary text-sm mb-6 leading-relaxed flex-grow">Group seminars, team challenges, and executive health programs designed to boost workplace productivity and reduce absenteeism.</p>
+                    <ul class="space-y-2 text-sm text-secondary mt-auto">
+                        <li><i class="fas fa-check text-accent mr-2"></i> Lunch & learn webinars</li>
+                        <li><i class="fas fa-check text-accent mr-2"></i> Team dashboard access</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
@@ -977,6 +985,7 @@
 </body>
 
 </html>
+
 
 
 
